@@ -181,10 +181,9 @@ export function Header() {
     () => [
       { name: "HOME", href: "/" },
       { name: "Shop", href: "/shop" },
-      ...activeCategories,
       { name: "Track Order", href: "/track-order" },
     ],
-    [activeCategories],
+    [],
   );
 
   const handleSearchSubmit = (e: React.FormEvent) => {
@@ -419,61 +418,6 @@ export function Header() {
               onSubmit={handleSearchSubmit}
               className="hidden md:flex items-center flex-1 max-w-xl border border-border/80 rounded-xl bg-background overflow-hidden relative shadow-2xs focus-within:border-accent"
             >
-              <HoverCard open={isDesktopCatOpen} onOpenChange={setIsDesktopCatOpen} openDelay={100} closeDelay={150}>
-                <HoverCardTrigger asChild>
-                  <button
-                    type="button"
-                    className="flex items-center gap-1.5 px-4 py-2 text-xs font-bold text-muted-foreground hover:text-foreground hover:bg-muted/30 transition-colors shrink-0 outline-none border-none select-none cursor-pointer h-full"
-                  >
-                    <span className="truncate max-w-[100px]">
-                      {selectedCategory ? selectedCategory.name : "All Categories"}
-                    </span>
-                    <ChevronDown className="h-3 w-3 shrink-0" />
-                  </button>
-                </HoverCardTrigger>
-                <HoverCardContent 
-                  align="start" 
-                  sideOffset={4}
-                  className="w-48 max-h-60 overflow-y-auto bg-popover border border-border rounded-xl shadow-md z-[100] p-1"
-                >
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setSelectedCategory(null);
-                      setIsDesktopCatOpen(false);
-                      if (searchVal.trim()) {
-                        router.push(`/shop?search=${encodeURIComponent(searchVal.trim())}`);
-                      } else {
-                        router.push(`/shop`);
-                      }
-                    }}
-                    className="w-full text-left rounded-lg cursor-pointer transition-colors px-3 py-1.5 text-xs font-semibold text-foreground hover:bg-accent/5 hover:text-accent"
-                  >
-                    All Categories
-                  </button>
-                  {parentCategories.map((cat: any) => {
-                    const subcategories = getSubcategories(cat.id);
-                    return (
-                      <HoverHeaderCategoryItem
-                        key={cat.id}
-                        category={cat}
-                        subcategories={subcategories}
-                        onSelect={(c) => {
-                          setSelectedCategory({ name: c.name, slug: c.slug });
-                          setIsDesktopCatOpen(false);
-                          const query = searchVal.trim()
-                            ? `/shop?category=${c.slug}&search=${encodeURIComponent(searchVal.trim())}`
-                            : `/shop?category=${c.slug}`;
-                          router.push(query);
-                        }}
-                      />
-                    );
-                  })}
-                </HoverCardContent>
-              </HoverCard>
-
-              <span className="h-5 w-[1px] bg-border/80 shrink-0" />
-
               <input
                 type="search"
                 placeholder={t("nav.searchProducts")}
@@ -734,29 +678,92 @@ export function Header() {
       {/* Row 2: Desktop Navigation Bar */}
       <div
         className={`hidden md:block border-t border-border/35 bg-background select-none transition-all duration-300 ease-in-out ${isScrolled
-          ? "max-h-0 opacity-0 overflow-hidden border-t-0 py-0"
-          : "max-h-14 opacity-100 py-1.5"
+          ? "max-h-0 opacity-0 overflow-hidden border-t-0"
+          : "h-[44px] lg:h-[48px] opacity-100"
           }`}
       >
-        <div className="container-shop flex items-center justify-start gap-1 flex-nowrap overflow-x-auto scrollbar-none">
-          {navigation.map((item) => {
-            const isActive = pathname === item.href;
-            return (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={`py-1.5 px-2.5 lg:px-4 text-xs lg:text-[14px] font-semibold transition-all duration-300 rounded-md flex items-center gap-1 shrink-0 ${isActive
-                  ? "bg-accent text-accent-foreground font-bold shadow-2xs"
-                  : "text-foreground hover:text-accent hover:bg-secondary/40"
-                  }`}
+        <div className="container-shop flex items-center h-full">
+          {/* Left: All Categories Dropdown (Same width as Sidebar) */}
+          <div className="hidden lg:block w-[260px] xl:w-[280px] shrink-0 h-full bg-accent rounded-lg group">
+            <HoverCard open={isDesktopCatOpen} onOpenChange={setIsDesktopCatOpen} openDelay={100} closeDelay={150}>
+              <HoverCardTrigger asChild>
+                <button
+                  type="button"
+                  className="flex items-center justify-between w-full h-full px-5 text-sm font-bold bg-transparent text-accent-foreground shrink-0 outline-none border-none select-none cursor-pointer"
+                >
+                  <span className="flex items-center gap-2.5">
+                    <Menu className="w-5 h-5" />
+                    {selectedCategory ? selectedCategory.name : "Browse Categories"}
+                  </span>
+                  <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200 group-hover:rotate-180" />
+                </button>
+              </HoverCardTrigger>
+              <HoverCardContent 
+                align="start" 
+                sideOffset={0}
+                className="w-[260px] xl:w-[280px] max-h-[70vh] overflow-y-auto bg-popover border border-border shadow-xl z-[100] p-1 rounded-b-lg rounded-t-none"
               >
-                <span>{item.name}</span>
-                {"hasDropdown" in item && (item as any).hasDropdown && (
-                  <ChevronDown className="h-3 w-3 shrink-0" />
-                )}
-              </Link>
-            );
-          })}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedCategory(null);
+                    setIsDesktopCatOpen(false);
+                    if (searchVal.trim()) {
+                      router.push(`/shop?search=${encodeURIComponent(searchVal.trim())}`);
+                    } else {
+                      router.push(`/shop`);
+                    }
+                  }}
+                  className="w-full text-left rounded-lg cursor-pointer transition-colors px-4 py-2.5 text-sm font-semibold text-foreground hover:bg-accent/5 hover:text-accent"
+                >
+                  All Categories
+                </button>
+                {parentCategories.map((cat: any) => {
+                  const subcategories = getSubcategories(cat.id);
+                  return (
+                    <HoverHeaderCategoryItem
+                      key={cat.id}
+                      category={cat}
+                      subcategories={subcategories}
+                      onSelect={(c) => {
+                        setSelectedCategory({ name: c.name, slug: c.slug });
+                        setIsDesktopCatOpen(false);
+                        const query = searchVal.trim()
+                          ? `/shop?category=${c.slug}&search=${encodeURIComponent(searchVal.trim())}`
+                          : `/shop?category=${c.slug}`;
+                        router.push(query);
+                      }}
+                    />
+                  );
+                })}
+              </HoverCardContent>
+            </HoverCard>
+          </div>
+
+          {/* Center: Navigation Items */}
+          <div className="flex-1 flex justify-center items-center gap-1 overflow-x-auto scrollbar-none h-full">
+            {navigation.map((item) => {
+              const isActive = pathname === item.href;
+              return (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className={`h-[36px] px-3 lg:px-4 text-xs lg:text-[14px] font-semibold transition-all duration-300 rounded-md flex items-center justify-center gap-1 shrink-0 ${isActive
+                    ? "bg-accent text-accent-foreground font-bold shadow-2xs"
+                    : "text-foreground hover:text-accent hover:bg-secondary/40"
+                    }`}
+                >
+                  <span>{item.name}</span>
+                  {"hasDropdown" in item && (item as any).hasDropdown && (
+                    <ChevronDown className="h-3 w-3 shrink-0" />
+                  )}
+                </Link>
+              );
+            })}
+          </div>
+
+          {/* Right Spacer for exact centering */}
+          <div className="hidden lg:block w-[260px] xl:w-[280px] shrink-0 h-full" />
         </div>
       </div>
     </header>
