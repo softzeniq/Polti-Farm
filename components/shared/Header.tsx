@@ -684,12 +684,12 @@ export function Header() {
       >
         <div className="container-shop flex items-center h-full">
           {/* Left: All Categories Dropdown (Same width as Sidebar) */}
-          <div className="hidden lg:block w-[260px] xl:w-[280px] shrink-0 h-full bg-accent rounded-lg group">
+          <div className="hidden lg:block w-[260px] xl:w-[280px] shrink-0 h-[36px] bg-accent rounded-md group">
             <HoverCard open={isDesktopCatOpen} onOpenChange={setIsDesktopCatOpen} openDelay={100} closeDelay={150}>
               <HoverCardTrigger asChild>
                 <button
                   type="button"
-                  className="flex items-center justify-between w-full h-full px-5 text-sm font-bold bg-transparent text-accent-foreground shrink-0 outline-none border-none select-none cursor-pointer"
+                  className="flex items-center justify-between w-full h-full px-5 text-sm font-bold bg-transparent text-accent-foreground shrink-0 outline-none border-none select-none cursor-pointer rounded-md"
                 >
                   <span className="flex items-center gap-2.5">
                     <Menu className="w-5 h-5" />
@@ -700,8 +700,8 @@ export function Header() {
               </HoverCardTrigger>
               <HoverCardContent 
                 align="start" 
-                sideOffset={0}
-                className="w-[260px] xl:w-[280px] max-h-[70vh] overflow-y-auto bg-popover border border-border shadow-xl z-[100] p-1 rounded-b-lg rounded-t-none"
+                sideOffset={4}
+                className="w-[260px] xl:w-[280px] max-h-[70vh] overflow-y-auto bg-popover border border-border shadow-xl z-[100] p-1 rounded-md"
               >
                 <button
                   type="button"

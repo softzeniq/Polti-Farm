@@ -264,44 +264,66 @@ export default function ShopPage() {
           )}
         </div>
         <div className="space-y-1.5 max-h-[320px] overflow-y-auto pr-1 text-xs font-medium scrollbar-thin">
-          {categories.map((cat) => {
-            const count = categoryCounts[cat.id] || 0;
-            const isSelected = selectedCategory.split(",").includes(cat.slug);
-            return (
-              <label
-                key={cat.id}
-                className="flex items-center gap-2.5 w-full px-2 py-1.5 rounded-xl hover:bg-secondary cursor-pointer transition-colors"
-              >
-                <div
-                  className={`w-4 h-4 rounded border flex items-center justify-center transition-colors shrink-0 ${isSelected
-                    ? "bg-accent border-accent text-accent-foreground"
-                    : "border-input bg-background"
-                    }`}
-                >
-                  {isSelected && <Check className="h-3 w-3" />}
+          {(() => {
+            const parentCategories = categories.filter((c) => !c.parent_id);
+            return parentCategories.map((cat) => {
+              const subs = categories.filter((c) => c.parent_id === cat.id);
+              
+              const renderCategoryLabel = (c: any, isSub = false) => {
+                const count = categoryCounts[c.id] || 0;
+                const isSelected = selectedCategory.split(",").includes(c.slug);
+                return (
+                  <label
+                    key={c.id}
+                    className={`flex items-center gap-2.5 w-full px-2 py-1.5 rounded-xl hover:bg-secondary cursor-pointer transition-colors ${isSub ? "text-[11px]" : ""}`}
+                  >
+                    <div
+                      className={`w-4 h-4 rounded border flex items-center justify-center transition-colors shrink-0 ${isSelected
+                        ? "bg-accent border-accent text-accent-foreground"
+                        : "border-input bg-background"
+                        }`}
+                    >
+                      {isSelected && <Check className="h-3 w-3" />}
+                    </div>
+                    <input
+                      type="checkbox"
+                      className="sr-only"
+                      checked={isSelected}
+                      onChange={(e) => {
+                        const current = selectedCategory && selectedCategory !== "all" ? selectedCategory.split(",") : [];
+                        let newCategories;
+                        if (e.target.checked) {
+                          newCategories = [...current.filter((slug) => slug !== ""), c.slug];
+                        } else {
+                          newCategories = current.filter((slug) => slug !== c.slug);
+                        }
+                        setSelectedCategory(newCategories.length > 0 ? newCategories.join(",") : "all");
+                      }}
+                    />
+                    <span className="truncate flex-1 text-foreground/80">{c.name}</span>
+                    {count > 0 && (
+                      <span className="text-[10px] text-muted-foreground ml-auto">{count}</span>
+                    )}
+                  </label>
+                );
+              };
+
+              const isParentSelected = selectedCategory.split(",").includes(cat.slug);
+              const isAnySubSelected = subs.some(sub => selectedCategory.split(",").includes(sub.slug));
+              const showSubs = isParentSelected || isAnySubSelected;
+
+              return (
+                <div key={cat.id} className="flex flex-col w-full mb-2 border-b border-border/40 pb-2 last:border-0 last:pb-0">
+                  {renderCategoryLabel(cat)}
+                  {showSubs && subs.length > 0 && (
+                    <div className="flex flex-col w-full pl-3 mt-1 space-y-1 relative before:absolute before:left-[11px] before:top-0 before:bottom-2 before:w-[1px] before:bg-border/60 animate-in slide-in-from-top-1 fade-in duration-200">
+                      {subs.map((sub) => renderCategoryLabel(sub, true))}
+                    </div>
+                  )}
                 </div>
-                <input
-                  type="checkbox"
-                  className="sr-only"
-                  checked={isSelected}
-                  onChange={(e) => {
-                    const current = selectedCategory && selectedCategory !== "all" ? selectedCategory.split(",") : [];
-                    let newCategories;
-                    if (e.target.checked) {
-                      newCategories = [...current.filter(c => c !== ""), cat.slug];
-                    } else {
-                      newCategories = current.filter(c => c !== cat.slug);
-                    }
-                    setSelectedCategory(newCategories.length > 0 ? newCategories.join(",") : "all");
-                  }}
-                />
-                <span className="truncate flex-1 text-foreground/80">{cat.name}</span>
-                {count > 0 && (
-                  <span className="text-[10px] text-muted-foreground ml-auto">{count}</span>
-                )}
-              </label>
-            );
-          })}
+              );
+            });
+          })()}
         </div>
       </div>
 
