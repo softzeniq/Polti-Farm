@@ -80,7 +80,7 @@ export function DefaultHomepage({
       <div className="w-full">
         <div className="container-shop pt-4 md:pt-6">
           <div className="flex items-stretch gap-4 lg:gap-6 w-full">
-            <div className="hidden lg:block w-[260px] shrink-0 xl:w-[280px]">
+            <div className="hidden lg:block w-[260px] pb-6 shrink-0 xl:w-[280px]">
               <CategorySidebar />
             </div>
             <div className="flex-1 w-full overflow-hidden">

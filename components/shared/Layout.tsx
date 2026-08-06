@@ -29,7 +29,7 @@ export function Layout({ children }: LayoutProps) {
       {!isAdmin && showBanner && <WhatsAppBanner />}
       {!isAdmin && <WhatsAppFloatingButton />}
       {!isAdmin && <Footer />}
-      {!isAdmin && <MobileMarquee />}
+      {/* {!isAdmin && <MobileMarquee />} */}
     </div>
   );
 }

@@ -205,7 +205,7 @@ export default function AdminCategories() {
                 >
                   <option value="">None (Top Level)</option>
                   {categories
-                    .filter((c) => c.id !== editingCategory?.id)
+                    .filter((c) => c.id !== editingCategory?.id && !c.parent_id)
                     .map((c) => (
                       <option key={c.id} value={c.id}>
                         {c.name}
