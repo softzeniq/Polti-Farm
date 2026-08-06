@@ -93,7 +93,7 @@ export function HeroSlider({ initialSlides }: { initialSlides?: SliderSlide[] })
   if (isLoading || isFetching) {
     return (
       <section className="w-full p-3 md:px-0 md:pt-0 md:pb-6">
-        <div className="relative overflow-hidden w-full rounded-xl aspect-[16/8] sm:aspect-[16/7] md:aspect-[16/7] xl:aspect-[16/9] xl:max-h-[700px] bg-secondary animate-pulse">
+        <div className="relative overflow-hidden w-full rounded-xl aspect-[16/8] sm:aspect-[21/9] md:aspect-[21/9] xl:aspect-[21/8] xl:max-h-[480px] bg-secondary animate-pulse">
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
             <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-accent" />
             {isStuck && (
@@ -121,7 +121,7 @@ export function HeroSlider({ initialSlides }: { initialSlides?: SliderSlide[] })
     <section className="w-full p-3 md:px-0 md:pt-0 md:pb-6">
       {/* Slider Container */}
       <div 
-        className="relative overflow-hidden group w-full rounded-xl aspect-[16/8] sm:aspect-[16/7] md:aspect-[16/7] xl:aspect-[16/9] xl:max-h-[700px]"
+        className="relative overflow-hidden group w-full rounded-xl aspect-[16/8] sm:aspect-[21/9] md:aspect-[21/9] xl:aspect-[21/8] xl:max-h-[480px]"
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}

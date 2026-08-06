@@ -47,7 +47,7 @@ function CategoryItem({ category, subcategories }: { category: Category; subcate
           <div
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
-            className="fixed z-[100] w-48 min-h-96 -ml-1 bg-background border border-border/50 shadow-xl rounded-xl flex flex-col py-2 animate-in fade-in zoom-in-95 duration-200"
+            className="fixed z-[100] w-48 min-h-40 -ml-1 bg-background border border-border/50 shadow-xl rounded-xl flex flex-col py-2 animate-in fade-in zoom-in-95 duration-200 overflow-y-auto scrollbar-thin scrollbar-thumb-accent/20 scrollbar-track-transparent"
             style={{ top: coords.top, left: coords.left + 4 }}
           >
             {subcategories.map((sub) => (
