@@ -34,7 +34,7 @@ function CategoryItem({ category, subcategories }: { category: Category; subcate
         href={`/shop?category=${category.slug}`}
         className="flex items-center justify-between px-5 py-2.5 hover:bg-accent/5 transition-colors"
       >
-        <span className="text-[13px] md:text-sm font-medium text-foreground/80 group-hover:text-accent transition-colors">
+        <span className="text-[13px] md:text-sm font-semibold text-foreground group-hover:text-accent transition-colors">
           {category.name}
         </span>
         {hasSubcategories && (

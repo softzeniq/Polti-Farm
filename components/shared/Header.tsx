@@ -75,9 +75,9 @@ function HoverHeaderCategoryItem({
         ref={itemRef}
         type="button"
         onClick={() => onSelect(category)}
-        className="w-full flex items-center justify-between px-3 py-1.5 text-xs font-semibold text-foreground hover:bg-muted rounded-lg transition-colors cursor-pointer text-left"
+        className="w-full flex items-center justify-between px-3 py-1.5 text-xs font-semibold text-foreground hover:bg-accent/5 rounded-lg transition-colors cursor-pointer text-left"
       >
-        <span>{category.name}</span>
+        <span className="group-hover:text-accent transition-colors">{category.name}</span>
         {hasSubcategories && (
           <ChevronRight className="w-3.5 h-3.5 text-muted-foreground/50 group-hover:text-accent transition-colors" />
         )}
@@ -94,7 +94,7 @@ function HoverHeaderCategoryItem({
             <button
               type="button"
               onClick={() => onSelect(category)}
-              className="w-full text-left px-3 py-1.5 hover:bg-muted text-xs font-semibold text-foreground rounded-lg transition-colors cursor-pointer"
+              className="w-full text-left px-3 py-1.5 hover:bg-accent/5 text-xs font-semibold text-foreground hover:text-accent rounded-lg transition-colors cursor-pointer"
             >
               All {category.name}
             </button>
@@ -103,7 +103,7 @@ function HoverHeaderCategoryItem({
                 key={sub.id}
                 type="button"
                 onClick={() => onSelect(sub)}
-                className="w-full text-left px-3 py-1.5 hover:bg-muted text-xs font-semibold text-foreground rounded-lg transition-colors cursor-pointer"
+                className="w-full text-left px-3 py-1.5 hover:bg-accent/5 text-xs font-semibold text-foreground hover:text-accent rounded-lg transition-colors cursor-pointer"
               >
                 {sub.name}
               </button>
@@ -447,7 +447,7 @@ export function Header() {
                         router.push(`/shop`);
                       }
                     }}
-                    className="w-full text-left rounded-lg cursor-pointer transition-colors px-3 py-1.5 text-xs font-semibold text-foreground hover:bg-muted"
+                    className="w-full text-left rounded-lg cursor-pointer transition-colors px-3 py-1.5 text-xs font-semibold text-foreground hover:bg-accent/5 hover:text-accent"
                   >
                     All Categories
                   </button>
