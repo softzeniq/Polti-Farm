@@ -1,5 +1,4 @@
 "use client";
-import { CategorySidebar } from "@/components/main/home/CategorySidebar";
 import { FeaturedCategories } from "@/components/main/home/FeaturedCategories";
 import { HeroSlider } from "@/components/main/home/HeroSlider";
 import { ProductCard } from "@/components/main/products/ProductCard";
@@ -28,7 +27,7 @@ function NewArrivalsSection({ section }: { section: HomepageSection }) {
     <section className="section-padding" ref={ref}>
       <div className="container-shop">
         <div
-          className={`flex items-center justify-between mb-8 reveal-left ${isVisible ? "reveal-visible" : ""}`}
+          className={`flex items-center justify-between  mb-8 reveal-left ${isVisible ? "reveal-visible" : ""}`}
         >
           <div>
             <h2 className="text-xl md:text-1xl">
@@ -78,16 +77,7 @@ export function DefaultHomepage({
   > = {
     hero_slider: () => (
       <div className="w-full">
-        <div className="container-shop pt-4 md:pt-6">
-          <div className="flex items-stretch gap-4 lg:gap-6 w-full">
-            <div className="hidden lg:block w-[260px] pb-6 shrink-0 xl:w-[280px]">
-              <CategorySidebar />
-            </div>
-            <div className="flex-1 w-full overflow-hidden">
-              <HeroSlider initialSlides={initialSlides} />
-            </div>
-          </div>
-        </div>
+        <HeroSlider initialSlides={initialSlides} />
       </div>
     ),
     featured_categories: () => <FeaturedCategories />,
@@ -127,7 +117,7 @@ export function DefaultHomepage({
         }
 
         return (
-        <React.Fragment key={section.id}>
+          <React.Fragment key={section.id}>
             {section.section_type === "customer_reviews" && (
               <PromoOffers />
             )}

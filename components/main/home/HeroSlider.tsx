@@ -76,7 +76,7 @@ export function HeroSlider({ initialSlides }: { initialSlides?: SliderSlide[] })
 
   if (isError) {
     return (
-      <section className="relative overflow-hidden bg-secondary h-[240px] sm:h-[380px] md:h-[520px] lg:h-[600px] w-full rounded-xl">
+      <section className="relative overflow-hidden bg-secondary h-[240px] sm:h-[380px] md:h-[520px] lg:h-[600px] w-full">
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-center p-6">
           <p className="text-muted-foreground font-medium">
             Couldn&apos;t load the slider.{" "}
@@ -92,8 +92,8 @@ export function HeroSlider({ initialSlides }: { initialSlides?: SliderSlide[] })
 
   if (isLoading || isFetching) {
     return (
-      <section className="w-full p-3 md:px-0 md:pt-0 md:pb-6">
-        <div className="relative overflow-hidden w-full rounded-xl aspect-[16/8] sm:aspect-[21/9] md:aspect-[21/9] xl:aspect-[21/8] xl:max-h-[480px] bg-secondary animate-pulse">
+      <section className="w-full">
+        <div className="relative overflow-hidden w-full aspect-[16/8] sm:aspect-[21/9] md:aspect-[21/9] xl:aspect-[21/8] xl:max-h-[480px] bg-secondary animate-pulse">
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
             <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-accent" />
             {isStuck && (
@@ -109,7 +109,7 @@ export function HeroSlider({ initialSlides }: { initialSlides?: SliderSlide[] })
 
   if (slides.length === 0) {
     return (
-      <section className="relative overflow-hidden bg-secondary h-[240px] sm:h-[380px] md:h-[520px] lg:h-[600px] w-full rounded-xl">
+      <section className="relative overflow-hidden bg-secondary h-[240px] sm:h-[380px] md:h-[520px] lg:h-[600px] w-full">
         <div className="absolute inset-0 flex items-center justify-center">
           <p className="text-muted-foreground font-semibold">No slides configured</p>
         </div>
@@ -118,10 +118,10 @@ export function HeroSlider({ initialSlides }: { initialSlides?: SliderSlide[] })
   }
 
   return (
-    <section className="w-full p-3 md:px-0 md:pt-0 md:pb-6">
+    <section className="w-full">
       {/* Slider Container */}
       <div 
-        className="relative overflow-hidden group w-full rounded-xl aspect-[16/8] sm:aspect-[21/9] md:aspect-[21/9] xl:aspect-[21/8] xl:max-h-[480px]"
+        className="relative overflow-hidden group w-full aspect-[16/8] sm:aspect-[21/9] md:aspect-[21/9] xl:aspect-[21/8] xl:max-h-[480px]"
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}

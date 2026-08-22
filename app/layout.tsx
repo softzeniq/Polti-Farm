@@ -34,13 +34,13 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    template: "%s | Suyeb Online Sports",
-    default: "Suyeb Online Sports | Premium Sports Gear, Clothing & Accessories",
+    template: "%s | Polti-Farms",
+    default: "Polti-Farms",
   },
   description:
-    "Suyeb Online Sports is your ultimate online destination in Bangladesh for 100% authentic sports gear, custom jerseys, football kits, cricket equipment, athletic clothing, and fitness accessories. Fast nationwide shipping & best prices guaranteed.",
+    "Polti-Farms is your ultimate online destination in Bangladesh for 100% authentic sports gear, custom jerseys, football kits, cricket equipment, athletic clothing, and fitness accessories. Fast nationwide shipping & best prices guaranteed.",
   keywords: [
-    "Suyeb Online Sports",
+    "Polti-Farms",
     "Suyeb Sports",
     "Sports Shop Bangladesh",
     "Online Sports Store BD",
