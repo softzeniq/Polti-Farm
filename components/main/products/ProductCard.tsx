@@ -174,25 +174,7 @@ export function ProductCard({ product }: ProductCardProps) {
             </h3>
           </Link>
 
-          {/* Review Stars & Stock Info */}
-          <div className="flex items-center justify-between mt-1 mb-2">
-            <div className="flex items-center gap-1">
-              <div className="flex items-center gap-0.5">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <Star
-                    key={star}
-                    className={`h-3.5 w-3.5 ${star <= Math.round(ratingValue)
-                      ? "fill-amber-400 text-amber-400 drop-shadow-sm"
-                      : "text-border fill-muted/20"
-                      }`}
-                  />
-                ))}
-              </div>
-              <span className="text-[11px] font-bold text-muted-foreground ml-1">
-                ({ratingValue.toFixed(1)})
-              </span>
-            </div>
-          </div>
+
 
           {/* Price Box */}
           <div className="flex items-baseline gap-2 mt-1">
