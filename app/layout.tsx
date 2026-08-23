@@ -3,20 +3,7 @@ import { Layout } from "@/components/shared/Layout";
 import { createClient } from "@/utils/supabase/server";
 import type { Metadata, Viewport } from "next";
 import { unstable_cache } from "next/cache";
-import { Inter, Sora } from "next/font/google";
 import "./globals.css";
-
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-});
-
-const sora = Sora({
-  variable: "--font-sora",
-  subsets: ["latin"],
-  weight: ["500", "600", "700", "800"],
-});
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://suyeb-online-sports.vercel.app";
 
@@ -305,11 +292,14 @@ export default async function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${sora.variable} h-full antialiased`}
+      className={`font-sans h-full antialiased`}
       data-scroll-behavior="smooth"
       suppressHydrationWarning
     >
       <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet" />
         <style dangerouslySetInnerHTML={{ __html: cssVariables }} />
         <script
           dangerouslySetInnerHTML={{

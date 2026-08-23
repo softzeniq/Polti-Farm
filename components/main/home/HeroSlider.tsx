@@ -16,6 +16,7 @@ export function HeroSlider({ initialSlides }: { initialSlides?: SliderSlide[] })
     isFetching,
     isError,
     error,
+    refetch,
   } = useSliderSlides(true, initialSlides);
   const slides = allSlides.filter(s => s.type !== 'testimonial');
   const [currentSlide, setCurrentSlide] = useState(0);

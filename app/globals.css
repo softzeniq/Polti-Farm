@@ -65,8 +65,10 @@
     --content-padding-x: 1rem;
     --content-padding-x-sm: 1.5rem;
     --content-padding-x-lg: 2rem;
-    --font-family-base: var(--font-inter), system-ui, -apple-system, sans-serif;
-    --font-family-heading: var(--font-sora), system-ui, -apple-system, sans-serif;
+    --font-inter: 'Inter', system-ui, sans-serif;
+    --font-sora: 'Sora', system-ui, sans-serif;
+    --font-family-base: var(--font-inter);
+    --font-family-heading: var(--font-sora);
 
     /* Base colors - Warm off-white and charcoal */
     --background: 40 20% 98%;
