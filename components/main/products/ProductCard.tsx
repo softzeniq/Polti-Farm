@@ -3,12 +3,12 @@ import React, { useState, useEffect } from "react";
 import { useCart } from "@/contexts/CartContext";
 import { useSiteSettings } from "@/contexts/SiteSettingsContext";
 import { Category, Product } from "@/hooks/useShopData";
-import { Plus, ShoppingCart, Star } from "lucide-react";
+import { Plus, ShoppingCart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { useProductRatingStats, useHideStockMap } from "@/hooks/useProductReviews";
+import { useHideStockMap } from "@/hooks/useProductReviews";
 import { WishlistButton } from "./WishlistButton";
 
 interface ProductCardProps {
@@ -19,7 +19,7 @@ export function ProductCard({ product }: ProductCardProps) {
   const { t, formatCurrency } = useSiteSettings();
   const { addItem } = useCart();
   const router = useRouter();
-  const { getProductRating } = useProductRatingStats();
+
   const { data: hideStockMap = {} } = useHideStockMap();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [touchStart, setTouchStart] = useState<number | null>(null);
@@ -52,8 +52,7 @@ export function ProductCard({ product }: ProductCardProps) {
     }
   };
 
-  const ratingInfo = getProductRating(product.id);
-  const ratingValue = ratingInfo.avgRating;
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const isStockHidden = hideStockMap[product.id] ?? (product as any)?.hide_stock ?? false;
   const isOutOfStock = product.stock <= 0 || isStockHidden;
