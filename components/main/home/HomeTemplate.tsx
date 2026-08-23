@@ -1,7 +1,6 @@
 "use client";
 import { FeaturedCategories } from "@/components/main/home/FeaturedCategories";
 import { HeroSlider } from "@/components/main/home/HeroSlider";
-import { TestimonialSlider } from "@/components/main/home/TestimonialSlider";
 import { ProductCard } from "@/components/main/products/ProductCard";
 import { HomepageSection } from "@/hooks/useHomePageTemplates";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
@@ -129,9 +128,6 @@ export function DefaultHomepage({
             )}
           </React.Fragment>
         );
-      })}
-      {/* Bottom Testimonial Slider placed exactly where requested (above footer) */}
-      <TestimonialSlider initialSlides={initialSlides} />
     </>
   );
 }

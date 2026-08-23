@@ -181,9 +181,13 @@ export function Header() {
     () => [
       { name: "HOME", href: "/" },
       { name: "Shop", href: "/shop" },
+      ...activeCategories.map((cat) => ({
+        name: cat.name.toUpperCase(),
+        href: cat.href,
+      })),
       { name: "Track Order", href: "/track-order" },
     ],
-    [],
+    [activeCategories],
   );
 
   const handleSearchSubmit = (e: React.FormEvent) => {

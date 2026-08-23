@@ -6,29 +6,51 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
-import { useReviews } from "@/hooks/useShopData";
+import { useSliderSlides, useReviews } from "@/hooks/useShopData";
 import { Quote, Star } from "lucide-react";
+import Image from "next/image";
 
 export function CustomerReviews() {
   const { data: reviews = [], isLoading } = useReviews();
+  const { data: slides = [] } = useSliderSlides(true);
   const { ref, isVisible } = useScrollReveal();
+  
+  const bgSlide = slides.find(s => s.type === 'testimonial');
 
   if (isLoading || reviews.length === 0) return null;
 
   return (
     <section
-      className="section-padding bg-muted/40 border-y border-border/50 text-foreground"
+      className="relative section-padding border-y border-border/50 text-foreground overflow-hidden"
       ref={ref}
     >
-      <div className="container-shop">
+      {bgSlide && (
+        <>
+          <div className="absolute inset-0 z-0">
+            <Image 
+              src={bgSlide.image} 
+              alt="Testimonial Background" 
+              fill 
+              className="object-cover object-center"
+              sizes="100vw"
+            />
+          </div>
+          <div className="absolute inset-0 z-0 bg-black/40" />
+        </>
+      )}
+      {!bgSlide && (
+        <div className="absolute inset-0 z-0 bg-muted/40" />
+      )}
+      
+      <div className="container-shop relative z-10">
         <div
           className={`text-center mb-12 reveal-base ${isVisible ? "reveal-visible" : ""}`}
         >
-          <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight">
-            What Our Customers Say
+          <h2 className={`text-2xl md:text-3xl font-extrabold tracking-tight ${bgSlide ? "text-white" : ""}`}>
+            {bgSlide && bgSlide.heading ? bgSlide.heading : "What Our Customers Say"}
           </h2>
-          <p className="text-muted-foreground mt-2 text-sm">
-            Real reviews from real customers
+          <p className={`mt-2 text-sm ${bgSlide ? "text-white/80" : "text-muted-foreground"}`}>
+            {bgSlide && bgSlide.text ? bgSlide.text : "Real reviews from real customers"}
           </p>
         </div>
 
