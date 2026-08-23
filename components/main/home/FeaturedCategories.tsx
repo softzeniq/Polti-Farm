@@ -92,25 +92,26 @@ export function FeaturedCategories() {
           {categories.slice(0, 16).map((category, index) => (
             <div
               key={category.id}
-              className={`flex flex-col items-center gap-2 select-none group reveal-scale stagger-${index + 1} ${isVisible ? "reveal-visible" : ""}`}
+              className={`flex flex-col items-center gap-3 select-none group reveal-scale stagger-${index + 1} ${isVisible ? "reveal-visible" : ""}`}
             >
               <Link
                 href={`/shop?category=${category.slug}`}
-                className="w-full aspect-square bg-secondary/30 border border-border/80 rounded-xl flex items-center justify-center transition-all duration-300 hover:shadow-lg hover:shadow-foreground/5 hover:border-accent/40 relative overflow-hidden"
+                className="w-full aspect-square bg-white border-2 border-accent/10 rounded-full flex items-center justify-center transition-all duration-300 shadow-[0_8px_30px_rgb(0,0,0,0.04)] group-hover:shadow-[0_8px_30px_rgba(34,197,94,0.12)] group-hover:-translate-y-1 relative overflow-hidden ring-4 ring-transparent group-hover:ring-accent/15 group-hover:border-accent/30"
               >
+                <div className="absolute inset-0 bg-accent/5 opacity-0 group-hover:opacity-100 transition-opacity z-10 pointer-events-none rounded-full" />
                 <Image
                   src={category.image}
                   alt={category.name}
                   fill
                   loading="lazy"
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  className="object-cover rounded-full transition-transform duration-700 ease-out group-hover:scale-110"
                   sizes="(max-width: 768px) 96px, 128px"
                 />
               </Link>
 
-              {/* Category Name (Outside/below the card) */}
+              {/* Category Name */}
               <Link href={`/shop?category=${category.slug}`} className="block w-full text-center">
-                <span className="text-xs md:text-sm font-bold tracking-tight text-foreground/90 group-hover:text-accent transition-colors line-clamp-1 px-0.5 max-w-full leading-none">
+                <span className="text-sm md:text-[15px] font-extrabold tracking-tight text-foreground/80 group-hover:text-accent transition-colors line-clamp-1 px-1 max-w-full leading-tight">
                   {category.name}
                 </span>
               </Link>
@@ -131,31 +132,32 @@ export function FeaturedCategories() {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function ScrollingRow({ items }: { items: any[] }) {
   return (
-    <div className="flex items-center gap-3 overflow-x-auto pb-1 px-1 scrollbar-none w-full">
+    <div className="flex items-center gap-4 overflow-x-auto pb-2 px-2 scrollbar-none w-full">
       {items.map((category) => (
         <div
           key={category.id}
-          className="flex-shrink-0 w-24 flex flex-col items-center gap-1.5 text-center group"
+          className="flex-shrink-0 w-24 flex flex-col items-center gap-2.5 text-center group"
         >
           <Link
             href={`/shop?category=${category.slug}`}
             draggable={false}
-            className="w-full aspect-square bg-secondary/40 border border-border/70 rounded-2xl flex items-center justify-center relative overflow-hidden shadow-2xs transition-all duration-300 hover:border-accent/40"
+            className="w-[84px] h-[84px] bg-white border-2 border-accent/15 rounded-full flex items-center justify-center relative overflow-hidden shadow-[0_4px_15px_rgb(0,0,0,0.05)] transition-all duration-300 hover:border-accent/40 hover:ring-4 hover:ring-accent/20"
           >
+            <div className="absolute inset-0 bg-accent/5 opacity-0 group-hover:opacity-100 transition-opacity z-10 pointer-events-none rounded-full" />
             <Image
               src={category.image}
               alt={category.name}
               fill
               loading="lazy"
               draggable={false}
-              className="object-cover transition-transform duration-300 group-hover:scale-105"
-              sizes="96px"
+              className="object-cover rounded-full transition-transform duration-500 group-hover:scale-105"
+              sizes="84px"
             />
           </Link>
 
           {/* Name */}
           <Link href={`/shop?category=${category.slug}`} draggable={false} className="block w-full text-center">
-            <span className="text-[11px] font-bold tracking-tight text-foreground/90 group-hover:text-accent transition-colors line-clamp-1 px-0.5 leading-tight">
+            <span className="text-[12px] font-extrabold tracking-tight text-foreground/80 group-hover:text-accent transition-colors line-clamp-2 px-0.5 leading-tight">
               {category.name}
             </span>
           </Link>

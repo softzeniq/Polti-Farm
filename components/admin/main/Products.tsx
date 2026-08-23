@@ -98,6 +98,7 @@ export default function AdminProducts() {
     is_variable: false,
     hide_stock: false,
     rating: 5,
+    unit: "",
     specifications: [] as { label: string; value: string }[],
   });
 
@@ -131,6 +132,7 @@ export default function AdminProducts() {
       is_variable: (product as any).is_variable ?? false,
       hide_stock: existingHideStock,
       rating: existingRating,
+      unit: product.unit || "",
       specifications: (product as any).specifications || [],
     });
     setIsDialogOpen(true);
@@ -193,6 +195,7 @@ export default function AdminProducts() {
       is_offer: formData.is_offer,
       is_variable: formData.is_variable,
       hide_stock: formData.hide_stock,
+      unit: formData.unit || null,
       specifications:
         formData.specifications.filter((s) => s.label.trim()).length > 0
           ? formData.specifications.filter((s) => s.label.trim())
@@ -253,6 +256,7 @@ export default function AdminProducts() {
       is_variable: false,
       hide_stock: false,
       rating: 5,
+      unit: "",
       specifications: [],
     });
   };
@@ -377,6 +381,29 @@ export default function AdminProducts() {
                             {cat.name}
                           </SelectItem>
                         ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-2">
+                      Unit (e.g., Kg, Pcs)
+                    </label>
+                    <Select
+                      value={formData.unit || "none"}
+                      onValueChange={(value) =>
+                        setFormData({ ...formData, unit: value === "none" ? "" : value })
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select unit" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="none">None</SelectItem>
+                        <SelectItem value="Kg">Kg (Kilogram)</SelectItem>
+                        <SelectItem value="Gm">Gm (Gram)</SelectItem>
+                        <SelectItem value="Pcs">Pcs (Pieces)</SelectItem>
+                        <SelectItem value="Ltr">Ltr (Liter)</SelectItem>
+                        <SelectItem value="Doz">Doz (Dozen)</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>

@@ -11,13 +11,13 @@ import { SliderSlide } from "@/hooks/useShopData";
 
 export function HeroSlider({ initialSlides }: { initialSlides?: SliderSlide[] }) {
   const {
-    data: slides = [],
+    data: allSlides = [],
     isLoading,
     isFetching,
     isError,
     error,
-    refetch,
   } = useSliderSlides(true, initialSlides);
+  const slides = allSlides.filter(s => s.type !== 'testimonial');
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isStuck, setIsStuck] = useState(false);
   const [touchStart, setTouchStart] = useState<number | null>(null);

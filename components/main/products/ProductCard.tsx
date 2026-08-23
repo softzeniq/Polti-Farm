@@ -104,97 +104,117 @@ export function ProductCard({ product }: ProductCardProps) {
 
   return (
     <div 
-      className="group bg-card rounded-md border border-border/80 flex flex-col h-full overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-foreground/5 justify-between"
+      className="group relative bg-card/90 backdrop-blur-md rounded-2xl border-2 border-border/30 flex flex-col h-full overflow-hidden transition-all duration-500 hover:shadow-xl hover:shadow-accent/15 hover:-translate-y-1.5 justify-between"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div>
-        {/* Image wrapper with padding */}
+      {/* Decorative subtle farm-inspired gradient background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-accent/5 via-transparent to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0 pointer-events-none" />
+      
+      <div className="relative z-10">
+        {/* Image wrapper with soft padding/background */}
         <div 
-          className="relative aspect-square overflow-hidden bg-secondary/50 rounded-sm"
+          className="relative aspect-[4/3] overflow-hidden bg-gradient-to-b from-secondary/40 to-secondary/80 border-b border-border/20"
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
         >
-          <Link href={`/products/${product.slug}`} className="block w-full h-full relative overflow-hidden">
+          <Link href={`/products/${product.slug}`} className="block w-full h-full relative overflow-hidden group-hover:scale-105 transition-transform duration-700 ease-out">
             <Image
               src={hoverImage || mainImage}
               alt={product.name}
-              className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+              className="w-full h-full object-cover mix-blend-multiply"
               height={320}
               width={320}
               loading="lazy"
               sizes="(max-width: 640px) 45vw, (max-width: 1024px) 25vw, 20vw"
             />
+            {/* Soft inner shadow for depth */}
+            <div className="absolute inset-0 shadow-[inset_0_0_20px_rgba(0,0,0,0.03)] pointer-events-none" />
           </Link>
 
-          {/* Top Left Discount Badge (replacing the NEW badge position, aligned directly with corner) */}
+          {/* Farm Fresh Tag - decorative */}
+          <div className="absolute top-2 right-2 z-10 pointer-events-none">
+             <span className="bg-white/80 backdrop-blur-md text-emerald-600 border border-emerald-100 px-2 py-0.5 text-[10px] font-bold rounded-full shadow-sm flex items-center gap-1 opacity-90">
+               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" /> Fresh
+             </span>
+          </div>
+
+          {/* Top Left Discount Badge */}
           {hasDiscount && (
             <div className="absolute top-0 left-0 z-10 pointer-events-none">
-              <span className="bg-accent text-accent-foreground px-2 py-1 text-[12px] font-bold rounded-tl-[3px] rounded-br-md block shadow-sm">
-                {discountPercent}% off
+              <span className="bg-gradient-to-r from-accent to-accent/80 text-accent-foreground px-2.5 py-1 text-[11px] font-black tracking-wide rounded-br-xl block shadow-md">
+                {discountPercent}% OFF
               </span>
             </div>
           )}
 
           {/* Out of Stock Overlay Badge */}
           {isOutOfStock && (
-            <div className="absolute inset-0 bg-background/60 backdrop-blur-[1px] flex items-center justify-center z-10">
-              <span className="bg-destructive text-destructive-foreground px-2.5 py-1 rounded-md text-[11px] font-black uppercase tracking-wider shadow-sm">
+            <div className="absolute inset-0 bg-background/60 backdrop-blur-[2px] flex items-center justify-center z-10 transition-all duration-300">
+              <span className="bg-destructive/90 text-destructive-foreground px-3 py-1.5 rounded-full text-[12px] font-black uppercase tracking-widest shadow-lg border border-destructive/50 transform -rotate-6">
                 Stock Out
               </span>
             </div>
           )}
 
-          {/* Wishlist Button (Bottom Right of Image Area) */}
+          {/* Wishlist Button */}
           <WishlistButton
             productId={product.id}
             size="sm"
-            className="absolute bottom-2 right-2 z-20 bg-background/90 backdrop-blur-sm border border-border/60 shadow-sm hover:scale-105 active:scale-95 transition-all duration-300 opacity-100 md:opacity-0 md:group-hover:opacity-100 h-8 w-8 text-muted-foreground"
+            className="absolute bottom-2 right-2 z-20 bg-background/95 backdrop-blur-md border border-border/80 shadow-md hover:shadow-lg hover:scale-110 active:scale-95 transition-all duration-300 opacity-100 md:opacity-0 md:group-hover:opacity-100 h-9 w-9 text-muted-foreground hover:text-red-500 rounded-full flex items-center justify-center"
           />
         </div>
 
         {/* Content Details */}
-        <div className="px-2 pt-2 pb-0.5 flex flex-col">
-          <Link href={`/products/${product.slug}`} className="block group-hover:text-accent transition-colors">
-            <h3 className="font-semibold text-[16px] line-clamp-2 leading-5 h-10 overflow-hidden text-ellipsis text-foreground/90 transition-colors group-hover:text-accent">
+        <div className="px-3 pt-3 pb-1 flex flex-col relative z-10">
+          <Link href={`/products/${product.slug}`} className="block group-hover:text-accent transition-colors duration-300">
+            <h3 className="font-bold text-[16px] md:text-[17px] line-clamp-2 leading-tight h-[2.5rem] text-foreground/90 transition-colors group-hover:text-accent">
               {product.name}
             </h3>
           </Link>
 
-          {/* Review Stars */}
-          <div className="flex items-center gap-1 my-1">
-            <div className="flex items-center gap-0.5">
-              {[1, 2, 3, 4, 5].map((star) => (
-                <Star
-                  key={star}
-                  className={`h-3.5 w-3.5 ${star <= Math.round(ratingValue)
-                    ? "fill-amber-400 text-amber-400"
-                    : "text-border fill-muted/20"
-                    }`}
-                />
-              ))}
+          {/* Review Stars & Stock Info */}
+          <div className="flex items-center justify-between mt-1 mb-2">
+            <div className="flex items-center gap-1">
+              <div className="flex items-center gap-0.5">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <Star
+                    key={star}
+                    className={`h-3.5 w-3.5 ${star <= Math.round(ratingValue)
+                      ? "fill-amber-400 text-amber-400 drop-shadow-sm"
+                      : "text-border fill-muted/20"
+                      }`}
+                  />
+                ))}
+              </div>
+              <span className="text-[11px] font-bold text-muted-foreground ml-1">
+                ({ratingValue.toFixed(1)})
+              </span>
             </div>
-            <span className="text-[10px] font-bold text-muted-foreground ml-0.5">
-              ({ratingValue.toFixed(1)})
-            </span>
           </div>
 
           {/* Price Box */}
-          <div className="flex items-center gap-1.5 text-md font-bold text-accent mt-0.5 leading-none">
-            {hasDiscount ? (
-              <>
-                <span className="text-sm font-bold text-accent">
-                  {formatCurrency(product.sale_price!)}
-                </span>
-                <span className="text-muted-foreground/60 font-medium">-</span>
-                <span className="text-muted-foreground/80 line-through font-semibold text-xs">
+          <div className="flex items-baseline gap-2 mt-1">
+            <div className="flex items-baseline gap-2">
+              {hasDiscount ? (
+                <>
+                  <span className="text-[18px] md:text-[20px] font-black text-accent tracking-tight drop-shadow-sm">
+                    {formatCurrency(product.sale_price!)}
+                  </span>
+                  <span className="text-muted-foreground/60 line-through font-semibold text-xs md:text-sm decoration-destructive/50">
+                    {formatCurrency(product.price)}
+                  </span>
+                </>
+              ) : (
+                <span className="text-[18px] md:text-[20px] font-black text-foreground tracking-tight drop-shadow-sm">
                   {formatCurrency(product.price)}
                 </span>
-              </>
-            ) : (
-              <span className="text-sm font-bold text-foreground">
-                {formatCurrency(product.price)}
+              )}
+            </div>
+            {product.unit && (
+              <span className="text-xs md:text-sm text-muted-foreground font-semibold">
+                / {product.unit}
               </span>
             )}
           </div>
@@ -202,40 +222,43 @@ export function ProductCard({ product }: ProductCardProps) {
       </div>
 
       {/* Action Buttons Row */}
-      {isOutOfStock ? (
-        <div className="mt-2 w-full px-2 pb-2">
+      <div className="relative z-10 mt-auto w-full px-3 pb-3 pt-2">
+        {isOutOfStock ? (
           <button
             disabled
-            className="w-full bg-destructive/10 text-destructive border border-destructive/20 font-extrabold py-2 px-3 rounded-md text-xs text-center cursor-not-allowed opacity-80"
+            className="w-full bg-destructive/5 text-destructive/80 border-2 border-destructive/10 font-extrabold py-2.5 px-3 rounded-xl text-sm text-center cursor-not-allowed opacity-90 transition-all duration-300"
           >
-            Stock Out
+            Out of Stock
           </button>
-        </div>
-      ) : (
-        <div className="flex items-center gap-2 mt-2 w-full px-2 pb-2">
-          <button
-            onClick={handleBuyNow}
-            className="bg-accent/5 text-accent hover:bg-accent hover:text-accent-foreground font-bold py-2.5 px-1.5 sm:px-4 rounded-md text-[12px] sm:text-[15px] whitespace-nowrap flex-1 transition-all duration-200 shadow-sm active:scale-[0.98] text-center select-none flex items-center justify-center gap-1 cursor-pointer"
-          >
-            <Plus className="h-3.5 w-3.5 shrink-0 hidden sm:inline-block" />
-            <span>{t("product.orderNow")}</span>
-          </button>
-          <div className="relative group/cart shrink-0">
+        ) : (
+          <div className="flex items-center gap-2 w-full">
             <button
-              onClick={handleAddToCartClick}
-              className="bg-accent/10 text-accent border border-accent/10 p-2 rounded-md transition-all duration-200 shrink-0 flex items-center justify-center h-10 w-10 active:scale-[0.98] cursor-pointer hover:bg-accent hover:text-accent-foreground"
-              aria-label="Add to cart"
-              title="Add to cart"
+              onClick={handleBuyNow}
+              className="bg-gradient-to-r from-accent to-accent/90 text-accent-foreground hover:shadow-lg hover:shadow-accent/25 hover:-translate-y-0.5 font-bold py-2.5 px-2 sm:px-4 rounded-xl text-[13px] sm:text-[14px] whitespace-nowrap flex-1 transition-all duration-300 active:scale-[0.97] text-center select-none flex items-center justify-center gap-1.5 cursor-pointer border border-accent/20 overflow-hidden relative group/btn"
             >
-              <ShoppingCart className="h-4.5 w-4.5" />
+              <div className="absolute inset-0 bg-white/20 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300 ease-out" />
+              <span className="relative z-10 flex items-center justify-center gap-1.5">
+                <Plus className="h-4 w-4 shrink-0 hidden sm:inline-block" />
+                {t("product.orderNow")}
+              </span>
             </button>
-            {/* Small hover tooltip below */}
-            <span className="pointer-events-none absolute -bottom-7 right-0 opacity-0 group-hover/cart:opacity-100 transition-opacity bg-foreground text-background text-[10px] font-bold px-2 py-0.5 rounded shadow-md whitespace-nowrap z-40">
-              Add to cart
-            </span>
+            
+            <div className="relative group/cart shrink-0">
+              <button
+                onClick={handleAddToCartClick}
+                className="bg-secondary/50 backdrop-blur-sm text-foreground/80 border-2 border-border/50 p-2 rounded-xl transition-all duration-300 shrink-0 flex items-center justify-center h-10 w-10 md:h-[42px] md:w-[42px] active:scale-[0.96] cursor-pointer hover:border-accent hover:text-accent hover:bg-accent/5 hover:shadow-md"
+                aria-label="Add to cart"
+              >
+                <ShoppingCart className="h-4.5 w-4.5 transition-transform group-hover/cart:scale-110" />
+              </button>
+              {/* Tooltip */}
+              <span className="pointer-events-none absolute -top-8 right-0 opacity-0 group-hover/cart:opacity-100 transition-opacity bg-foreground/90 backdrop-blur-sm text-background text-[11px] font-bold px-2.5 py-1 rounded-md shadow-lg whitespace-nowrap z-40 transform translate-y-1 group-hover/cart:translate-y-0">
+                Add to Cart
+              </span>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

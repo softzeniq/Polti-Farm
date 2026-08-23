@@ -606,6 +606,11 @@ export default function ProductDetailsClient() {
                     {formatCurrency(product.price)}
                   </span>
                 )}
+                {product.unit && (
+                  <span className="text-xl md:text-2xl text-muted-foreground font-semibold self-end pb-1">
+                    / {product.unit}
+                  </span>
+                )}
               </div>
 
               {!isStockHidden && (

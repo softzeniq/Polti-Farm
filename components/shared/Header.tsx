@@ -416,14 +416,105 @@ export function Header() {
             {/* Desktop Wide Search Bar */}
             <form
               onSubmit={handleSearchSubmit}
-              className="hidden md:flex items-center flex-1 max-w-xl border border-border/80 rounded-xl bg-background overflow-hidden relative shadow-2xs focus-within:border-accent"
+              className="hidden md:flex items-center flex-1 max-w-xl border border-border/80 rounded-xl bg-background overflow-visible relative shadow-2xs focus-within:border-accent"
             >
+              {/* Category Dropdown inside Search Bar */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    type="button"
+                    className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-foreground/80 bg-secondary/30 hover:bg-secondary/50 transition-colors border-r border-border/50 shrink-0 cursor-pointer h-full"
+                  >
+                    <span className="truncate max-w-[120px]">
+                      {selectedCategory ? selectedCategory.name : "All Categories"}
+                    </span>
+                    <ChevronDown className="h-4 w-4 shrink-0" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="w-56 max-h-[60vh] overflow-y-auto bg-popover border border-border rounded-xl shadow-md z-50 p-1">
+                  <DropdownMenuItem
+                    onClick={() => {
+                      setSelectedCategory(null);
+                      if (searchVal.trim()) {
+                        router.push(`/shop?search=${encodeURIComponent(searchVal.trim())}`);
+                      } else {
+                        router.push(`/shop`);
+                      }
+                    }}
+                    className="rounded-lg cursor-pointer text-sm font-bold px-3 py-2"
+                  >
+                    All Categories
+                  </DropdownMenuItem>
+                  {parentCategories.map((cat: any) => {
+                    const subcategories = getSubcategories(cat.id);
+                    const hasSub = subcategories.length > 0;
+
+                    if (hasSub) {
+                      return (
+                        <DropdownMenuSub key={cat.id}>
+                          <DropdownMenuSubTrigger className="rounded-lg cursor-pointer text-sm font-semibold px-3 py-2">
+                            {cat.name}
+                          </DropdownMenuSubTrigger>
+                          <DropdownMenuPortal>
+                            <DropdownMenuSubContent className="z-50 p-1 rounded-xl w-48">
+                              <DropdownMenuItem
+                                onClick={() => {
+                                  setSelectedCategory({ name: cat.name, slug: cat.slug });
+                                  const query = searchVal.trim()
+                                    ? `/shop?category=${cat.slug}&search=${encodeURIComponent(searchVal.trim())}`
+                                    : `/shop?category=${cat.slug}`;
+                                  router.push(query);
+                                }}
+                                className="rounded-lg cursor-pointer text-sm font-bold px-3 py-2"
+                              >
+                                All {cat.name}
+                              </DropdownMenuItem>
+                              {subcategories.map((sub: any) => (
+                                <DropdownMenuItem
+                                  key={sub.id}
+                                  onClick={() => {
+                                    setSelectedCategory({ name: sub.name, slug: sub.slug });
+                                    const query = searchVal.trim()
+                                      ? `/shop?category=${sub.slug}&search=${encodeURIComponent(searchVal.trim())}`
+                                      : `/shop?category=${sub.slug}`;
+                                    router.push(query);
+                                  }}
+                                  className="rounded-lg cursor-pointer text-sm font-semibold px-3 py-2"
+                                >
+                                  {sub.name}
+                                </DropdownMenuItem>
+                              ))}
+                            </DropdownMenuSubContent>
+                          </DropdownMenuPortal>
+                        </DropdownMenuSub>
+                      );
+                    }
+
+                    return (
+                      <DropdownMenuItem
+                        key={cat.id}
+                        onClick={() => {
+                          setSelectedCategory({ name: cat.name, slug: cat.slug });
+                          const query = searchVal.trim()
+                            ? `/shop?category=${cat.slug}&search=${encodeURIComponent(searchVal.trim())}`
+                            : `/shop?category=${cat.slug}`;
+                          router.push(query);
+                        }}
+                        className="rounded-lg cursor-pointer text-sm font-semibold px-3 py-2"
+                      >
+                        {cat.name}
+                      </DropdownMenuItem>
+                    );
+                  })}
+                </DropdownMenuContent>
+              </DropdownMenu>
+
               <input
                 type="search"
                 placeholder={t("nav.searchProducts")}
                 value={searchVal}
                 onChange={(e) => setSearchVal(e.target.value)}
-                className="w-full py-2 pl-3 pr-10 text-sm bg-transparent outline-none border-none placeholder-muted-foreground"
+                className="w-full py-2.5 pl-3 pr-10 text-sm bg-transparent outline-none border-none placeholder-muted-foreground"
               />
               {searchVal && (
                 <button
@@ -436,9 +527,9 @@ export function Header() {
               )}
               <button
                 type="submit"
-                className="bg-accent text-accent-foreground p-2.5 px-5 hover:bg-accent/90 transition-colors flex items-center justify-center shrink-0 border-l border-border/10 cursor-pointer"
+                className="bg-accent text-accent-foreground h-full px-5 hover:bg-accent/90 transition-colors flex items-center justify-center shrink-0 border-l border-border/10 cursor-pointer"
               >
-                <Search className="h-4 w-4" />
+                <Search className="h-4.5 w-4.5" />
               </button>
             </form>
 
@@ -683,62 +774,8 @@ export function Header() {
           }`}
       >
         <div className="container-shop flex items-center h-full">
-          {/* Left: All Categories Dropdown (Same width as Sidebar) */}
-          <div className="hidden lg:block w-[260px] xl:w-[280px] shrink-0 h-[36px] bg-accent rounded-md group">
-            <HoverCard open={isDesktopCatOpen} onOpenChange={setIsDesktopCatOpen} openDelay={100} closeDelay={150}>
-              <HoverCardTrigger asChild>
-                <button
-                  type="button"
-                  className="flex items-center justify-between w-full h-full px-5 text-sm font-bold bg-transparent text-accent-foreground shrink-0 outline-none border-none select-none cursor-pointer rounded-md"
-                >
-                  <span className="flex items-center gap-2.5">
-                    <Menu className="w-5 h-5" />
-                    {selectedCategory ? selectedCategory.name : "Browse Categories"}
-                  </span>
-                  <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200 group-hover:rotate-180" />
-                </button>
-              </HoverCardTrigger>
-              <HoverCardContent 
-                align="start" 
-                sideOffset={4}
-                className="w-[260px] xl:w-[280px] max-h-[70vh] overflow-y-auto bg-popover border border-border shadow-xl z-[100] p-1 rounded-md"
-              >
-                <button
-                  type="button"
-                  onClick={() => {
-                    setSelectedCategory(null);
-                    setIsDesktopCatOpen(false);
-                    if (searchVal.trim()) {
-                      router.push(`/shop?search=${encodeURIComponent(searchVal.trim())}`);
-                    } else {
-                      router.push(`/shop`);
-                    }
-                  }}
-                  className="w-full text-left rounded-lg cursor-pointer transition-colors px-4 py-2.5 text-sm font-semibold text-foreground hover:bg-accent/5 hover:text-accent"
-                >
-                  All Categories
-                </button>
-                {parentCategories.map((cat: any) => {
-                  const subcategories = getSubcategories(cat.id);
-                  return (
-                    <HoverHeaderCategoryItem
-                      key={cat.id}
-                      category={cat}
-                      subcategories={subcategories}
-                      onSelect={(c) => {
-                        setSelectedCategory({ name: c.name, slug: c.slug });
-                        setIsDesktopCatOpen(false);
-                        const query = searchVal.trim()
-                          ? `/shop?category=${c.slug}&search=${encodeURIComponent(searchVal.trim())}`
-                          : `/shop?category=${c.slug}`;
-                        router.push(query);
-                      }}
-                    />
-                  );
-                })}
-              </HoverCardContent>
-            </HoverCard>
-          </div>
+          {/* Left Spacer for exact centering matching Right Spacer */}
+          <div className="hidden lg:block w-[260px] xl:w-[280px] shrink-0 h-full" />
 
           {/* Center: Navigation Items */}
           <div className="flex-1 flex justify-center items-center gap-1 overflow-x-auto scrollbar-none h-full">

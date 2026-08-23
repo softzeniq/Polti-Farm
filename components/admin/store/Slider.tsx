@@ -56,6 +56,7 @@ export default function AdminSlider() {
     cta_link: "/shop",
     sort_order: 0,
     is_active: true,
+    type: "hero",
   });
 
   const handleEdit = (slide: SliderSlide) => {
@@ -68,6 +69,7 @@ export default function AdminSlider() {
       cta_link: slide.cta_link || "/shop",
       sort_order: slide.sort_order || 0,
       is_active: slide.is_active,
+      type: slide.type || "hero",
     });
     setIsDialogOpen(true);
   };
@@ -116,6 +118,7 @@ export default function AdminSlider() {
       cta_link: "/shop",
       sort_order: slides.length,
       is_active: true,
+      type: "hero",
     });
   };
 
@@ -133,9 +136,9 @@ export default function AdminSlider() {
     <div>
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold">Hero Slider</h1>
+          <h1 className="text-2xl md:text-3xl font-bold">Slider Manager</h1>
           <p className="text-muted-foreground mt-1">
-            Manage homepage hero slider images (heading and text are optional)
+            Manage homepage hero slider images and bottom testimonial sliders
           </p>
         </div>
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -167,6 +170,22 @@ export default function AdminSlider() {
                   onChange={(url) => setFormData({ ...formData, image: url })}
                   folder="slider"
                 />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">
+                  Slider Type
+                </label>
+                <select
+                  value={formData.type}
+                  onChange={(e) =>
+                    setFormData({ ...formData, type: e.target.value })
+                  }
+                  className="input-shop"
+                >
+                  <option value="hero">Hero Slider (Top)</option>
+                  <option value="testimonial">Testimonial Slider (Bottom)</option>
+                </select>
               </div>
 
               <div>
@@ -310,9 +329,14 @@ export default function AdminSlider() {
                       <GripVertical className="h-5 w-5" />
                     </div>
                     <div>
-                      <p className="text-sm text-muted-foreground mb-1">
-                        Slide {index + 1} {!slide.is_active && "(Inactive)"}
-                      </p>
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${slide.type === 'testimonial' ? 'bg-indigo-100 text-indigo-700' : 'bg-emerald-100 text-emerald-700'}`}>
+                          {slide.type === 'testimonial' ? 'Bottom Slider' : 'Hero Slider'}
+                        </span>
+                        <p className="text-sm text-muted-foreground">
+                          Slide {index + 1} {!slide.is_active && "(Inactive)"}
+                        </p>
+                      </div>
                       <h3 className="font-semibold">
                         {slide.heading || "Banner Image (No Title)"}
                       </h3>

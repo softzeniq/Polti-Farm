@@ -22,6 +22,7 @@ export interface Product {
   is_offer: boolean;
   is_variable: boolean;
   fabrics?: string | null;
+  unit?: string | null;
   rating?: number | null;
   created_at: string;
   updated_at: string;
@@ -48,6 +49,7 @@ export interface SliderSlide {
   cta_link: string;
   sort_order: number;
   is_active: boolean;
+  type?: string;
   created_at: string;
   updated_at: string;
 }
