@@ -104,7 +104,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
   return (
     <div 
-      className="group bg-card rounded-md border border-border/80 flex flex-col h-full overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-foreground/5 p-2 justify-between"
+      className="group bg-card rounded-md border border-border/80 flex flex-col h-full overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-foreground/5 justify-between"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -155,7 +155,7 @@ export function ProductCard({ product }: ProductCardProps) {
         </div>
 
         {/* Content Details */}
-        <div className="pt-2 pb-0.5 flex flex-col">
+        <div className="px-2 pt-2 pb-0.5 flex flex-col">
           <Link href={`/products/${product.slug}`} className="block group-hover:text-accent transition-colors">
             <h3 className="font-semibold text-[16px] line-clamp-2 leading-5 h-10 overflow-hidden text-ellipsis text-foreground/90 transition-colors group-hover:text-accent">
               {product.name}
@@ -203,7 +203,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
       {/* Action Buttons Row */}
       {isOutOfStock ? (
-        <div className="mt-2 w-full">
+        <div className="mt-2 w-full px-2 pb-2">
           <button
             disabled
             className="w-full bg-destructive/10 text-destructive border border-destructive/20 font-extrabold py-2 px-3 rounded-md text-xs text-center cursor-not-allowed opacity-80"
@@ -212,7 +212,7 @@ export function ProductCard({ product }: ProductCardProps) {
           </button>
         </div>
       ) : (
-        <div className="flex items-center gap-2 mt-2 w-full">
+        <div className="flex items-center gap-2 mt-2 w-full px-2 pb-2">
           <button
             onClick={handleBuyNow}
             className="bg-accent/5 text-accent hover:bg-accent hover:text-accent-foreground font-bold py-2.5 px-1.5 sm:px-4 rounded-md text-[12px] sm:text-[15px] whitespace-nowrap flex-1 transition-all duration-200 shadow-sm active:scale-[0.98] text-center select-none flex items-center justify-center gap-1 cursor-pointer"
