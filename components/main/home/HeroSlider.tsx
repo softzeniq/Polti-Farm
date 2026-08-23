@@ -120,7 +120,7 @@ export function HeroSlider({ initialSlides }: { initialSlides?: SliderSlide[] })
   return (
     <section className="w-full">
       {/* Slider Container */}
-      <div 
+      <div
         className="relative overflow-hidden group w-full aspect-[16/8] sm:aspect-[21/9] md:aspect-[21/9] xl:aspect-[21/8] xl:max-h-[480px]"
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
@@ -172,32 +172,32 @@ export function HeroSlider({ initialSlides }: { initialSlides?: SliderSlide[] })
                   />
 
                   {/* Slide Content Layer */}
-                  <div className="absolute inset-0 z-20 flex items-center">
-                    <div className="container-shop w-full px-6 md:px-12 lg:px-16">
-                      <div className="max-w-xl md:max-w-2xl text-white flex flex-col gap-3 md:gap-5">
-                        {hasHeading && (
-                          <h1
-                            className={`text-lg sm:text-2xl md:text-3xl lg:text-4xl font-extrabold tracking-tight leading-tight transition-all duration-700 delay-400 transform ${isActive ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
-                              }`}
-                          >
-                            {slide.heading}
-                          </h1>
-                        )}
+                  <div className="absolute inset-0 z-20 flex items-center justify-center">
+                    <div className="container-shop w-full px-6 md:px-12 lg:px-16 flex justify-center">
+                      <div className="max-w-xl md:max-w-6xl text-white flex flex-col items-center text-center gap-3 md:gap-4">
                         {hasText && (
                           <p
-                            className={`text-xs sm:text-sm md:text-lg text-white/80 line-clamp-2 md:line-clamp-none transition-all duration-700 delay-600 transform ${isActive ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
+                            className={`text-xs sm:text-sm font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] text-white transition-all duration-700 delay-300 transform ${isActive ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
                               }`}
                           >
                             {slide.text}
                           </p>
                         )}
+                        {hasHeading && (
+                          <h1
+                            className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif italic font-bold tracking-normal leading-tight transition-all duration-700 delay-400 transform ${isActive ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
+                              }`}
+                          >
+                            {slide.heading}
+                          </h1>
+                        )}
                         {slide.cta_text && (
                           <div
-                            className={`pt-1 md:pt-2 transition-all duration-700 delay-800 transform ${isActive ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
+                            className={`pt-2 md:pt-4 transition-all duration-700 delay-600 transform ${isActive ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
                               }`}
                           >
                             <Link href={ctaTarget}>
-                              <Button className="rounded-full bg-accent text-accent-foreground hover:bg-accent/90 px-4 py-1.5 md:px-8 md:py-5 font-bold text-[11px] md:text-sm uppercase tracking-wider transition-all shadow-lg hover:shadow-accent/20 active:scale-95 duration-300 cursor-pointer">
+                              <Button className="rounded-none bg-white text-black hover:bg-gray-200 px-6 py-2 md:px-8 md:py-6 font-bold text-[11px] md:text-sm uppercase tracking-wider transition-all duration-300 cursor-pointer">
                                 {slide.cta_text}
                               </Button>
                             </Link>

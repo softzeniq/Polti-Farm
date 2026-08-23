@@ -66,13 +66,13 @@ export default function ProductDetailsClient() {
   const { data: variants = [] } = useProductVariants(product?.id || "");
   const { data: reviews = [] } = useProductReviews(product?.id || "", true);
   const [selectedImage, setSelectedImage] = useState(0);
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState(10);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   const [isBuyingNow, setIsBuyingNow] = useState(false);
   const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(
     null,
   );
-  const [sizeQuantities, setSizeQuantities] = useState<Record<string, number>>({});
+  const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [selectedFabric, setSelectedFabric] = useState<string>("Dri-Fit (ড্রাই-ফিট)");
   const [activeTab, setActiveTab] = useState<"description" | "additional" | "reviews">("description");
@@ -112,7 +112,7 @@ export default function ProductDetailsClient() {
     if (variants.length > 0) {
       const normFabric = selectedFabric ? selectedFabric.toLowerCase().trim() : "";
       const normColor = selectedColor ? selectedColor.toLowerCase().trim() : "";
-      const activeSize = Object.keys(sizeQuantities).find(s => sizeQuantities[s] > 0) || null;
+      const activeSize = selectedSize;
 
       const match =
         variants.find((v) => {
@@ -146,7 +146,7 @@ export default function ProductDetailsClient() {
         setSelectedVariant(match);
       }
     }
-  }, [selectedFabric, sizeQuantities, selectedColor, variants, selectedVariant?.id]);
+  }, [selectedFabric, selectedSize, selectedColor, variants, selectedVariant?.id]);
 
   const whatsappEnabled =
     storeSettings?.whatsapp_order_enabled === "true" &&
@@ -169,8 +169,8 @@ export default function ProductDetailsClient() {
       const availableVariant = variants.find((v) => v.is_active && v.stock > 0) || variants[0];
       if (availableVariant) {
         setSelectedVariant(availableVariant);
-        if (availableVariant.size && Object.keys(sizeQuantities).length === 0) {
-          setSizeQuantities({ [availableVariant.size]: 1 });
+        if (availableVariant.size && !selectedSize) {
+          setSelectedSize(availableVariant.size);
         }
         if (availableVariant.color && !selectedColor) {
           const colors = availableVariant.color.split(",").map((c) => c.trim()).filter(Boolean);
@@ -179,7 +179,7 @@ export default function ProductDetailsClient() {
         if (availableVariant.fabric && !selectedFabric) setSelectedFabric(availableVariant.fabric);
       }
     }
-  }, [variants, selectedVariant, sizeQuantities, selectedColor, selectedFabric]);
+  }, [variants, selectedVariant, selectedSize, selectedColor, selectedFabric]);
 
   const selectedFabricVariant = useMemo(() => {
     if (!selectedFabric || variants.length === 0) return null;
@@ -270,16 +270,8 @@ export default function ProductDetailsClient() {
     : 0;
 
   const handleAddToCart = async () => {
-    const activeSizes = Object.keys(sizeQuantities).filter(s => sizeQuantities[s] > 0);
-    const hasSizes = variants.some(v => v.size);
-
     if (hasVariants && !selectedVariant) {
       toast.error("Please select a variant");
-      return;
-    }
-
-    if (hasSizes && activeSizes.length === 0) {
-      toast.error("Please select at least one size quantity");
       return;
     }
 
@@ -289,24 +281,20 @@ export default function ProductDetailsClient() {
     const fabricSuffix = selectedFabric ? `-${selectedFabric}` : "";
     let totalAdded = 0;
 
-    const addToCartLogic = (size: string | undefined, qty: number) => {
-      const specificVariant = hasSizes && size ? variants.find(v =>
-        v.size === size &&
-        (!selectedColor || v.color?.includes(selectedColor)) &&
-        (!selectedFabric || v.fabric === selectedFabric)
-      ) || selectedVariant : selectedVariant;
+    const addToCartLogic = (qty: number) => {
+      const specificVariant = selectedVariant;
 
       const cartItemId = specificVariant
         ? `${product.id}-${specificVariant.id}${fabricSuffix}`
         : `${product.id}${fabricSuffix}`;
 
       const variantSpecs = [
-        size || specificVariant?.size,
-        selectedColor || specificVariant?.color,
+        specificVariant?.size,
+        specificVariant?.color,
         selectedFabric
       ].filter(Boolean);
 
-      const activeVarForPrice = specificVariant || selectedVariant;
+      const activeVarForPrice = specificVariant;
 
       addItem({
         id: cartItemId,
@@ -330,8 +318,8 @@ export default function ProductDetailsClient() {
         stock: activeVarForPrice?.stock || effectiveStock,
         variantId: activeVarForPrice?.id || undefined,
         variantInfo: {
-          size: size || specificVariant?.size || undefined,
-          color: selectedColor || specificVariant?.color || undefined,
+          size: specificVariant?.size || undefined,
+          color: specificVariant?.color || undefined,
           fabric: selectedFabric || undefined,
         },
       });
@@ -347,13 +335,7 @@ export default function ProductDetailsClient() {
       totalAdded += qty;
     };
 
-    if (hasSizes && activeSizes.length > 0) {
-      activeSizes.forEach(size => {
-        addToCartLogic(size, sizeQuantities[size]);
-      });
-    } else {
-      addToCartLogic(undefined, quantity);
-    }
+    addToCartLogic(quantity);
 
     toast.success(t("product.addedToCart") || "Product added to cart", {
       description: `${totalAdded}x ${product.name}`,
@@ -363,16 +345,8 @@ export default function ProductDetailsClient() {
   };
 
   const handleBuyNow = async () => {
-    const activeSizes = Object.keys(sizeQuantities).filter(s => sizeQuantities[s] > 0);
-    const hasSizes = variants.some(v => v.size);
-
     if (hasVariants && !selectedVariant) {
       toast.error("Please select a variant");
-      return;
-    }
-
-    if (hasSizes && activeSizes.length === 0) {
-      toast.error("Please select at least one size quantity");
       return;
     }
 
@@ -380,24 +354,20 @@ export default function ProductDetailsClient() {
 
     const fabricSuffix = selectedFabric ? `-${selectedFabric}` : "";
 
-    const addToCartLogic = (size: string | undefined, qty: number) => {
-      const specificVariant = hasSizes && size ? variants.find(v =>
-        v.size === size &&
-        (!selectedColor || v.color?.includes(selectedColor)) &&
-        (!selectedFabric || v.fabric === selectedFabric)
-      ) || selectedVariant : selectedVariant;
+    const addToCartLogic = (qty: number) => {
+      const specificVariant = selectedVariant;
 
       const cartItemId = specificVariant
         ? `${product.id}-${specificVariant.id}${fabricSuffix}`
         : `${product.id}${fabricSuffix}`;
 
       const variantSpecs = [
-        size || specificVariant?.size,
-        selectedColor || specificVariant?.color,
+        specificVariant?.size,
+        specificVariant?.color,
         selectedFabric
       ].filter(Boolean);
 
-      const activeVarForPrice = specificVariant || selectedVariant;
+      const activeVarForPrice = specificVariant;
 
       addItem({
         id: cartItemId,
@@ -421,8 +391,8 @@ export default function ProductDetailsClient() {
         stock: activeVarForPrice?.stock || effectiveStock,
         variantId: activeVarForPrice?.id || undefined,
         variantInfo: {
-          size: size || specificVariant?.size || undefined,
-          color: selectedColor || specificVariant?.color || undefined,
+          size: specificVariant?.size || undefined,
+          color: specificVariant?.color || undefined,
           fabric: selectedFabric || undefined,
         },
       });
@@ -436,13 +406,7 @@ export default function ProductDetailsClient() {
       });
     };
 
-    if (hasSizes && activeSizes.length > 0) {
-      activeSizes.forEach(size => {
-        addToCartLogic(size, sizeQuantities[size]);
-      });
-    } else {
-      addToCartLogic(undefined, quantity);
-    }
+    addToCartLogic(quantity);
 
     router.push("/checkout?mode=buynow");
   };
@@ -679,10 +643,8 @@ export default function ProductDetailsClient() {
                   variants={variants.filter((v) => v.is_active)}
                   selectedVariant={selectedVariant}
                   onSelect={setSelectedVariant}
-                  sizeQuantities={sizeQuantities}
-                  onSizeQuantityChange={(size, qty) => {
-                    setSizeQuantities(prev => ({ ...prev, [size]: qty }));
-                  }}
+                  selectedSize={selectedSize}
+                  onSizeSelect={setSelectedSize}
                   selectedColor={selectedColor}
                   onColorSelect={setSelectedColor}
                   fabricOptions={fabricOptions}
@@ -703,7 +665,6 @@ export default function ProductDetailsClient() {
             )}
 
             <div className="space-y-4 pt-2">
-              {!variants.some(v => v.size) && (
                 <div className="flex items-center gap-4">
                   <span className="text-xs font-bold text-foreground uppercase tracking-wider">Qty</span>
                   <div className="inline-flex items-center border border-border/80 rounded-xl overflow-hidden bg-card">
@@ -711,8 +672,8 @@ export default function ProductDetailsClient() {
                       variant="ghost"
                       size="icon"
                       className="h-10 w-10 rounded-none hover:bg-secondary cursor-pointer"
-                      onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                      disabled={quantity <= 1}
+                      onClick={() => setQuantity(Math.max(10, quantity - 10))}
+                      disabled={quantity <= 10}
                     >
                       <Minus className="h-4 w-4" />
                     </Button>
@@ -724,7 +685,7 @@ export default function ProductDetailsClient() {
                       size="icon"
                       className="h-10 w-10 rounded-none hover:bg-secondary cursor-pointer"
                       onClick={() =>
-                        setQuantity(Math.min(effectiveStock, quantity + 1))
+                        setQuantity(Math.min(effectiveStock, quantity + 10))
                       }
                       disabled={quantity >= effectiveStock}
                     >
@@ -732,7 +693,6 @@ export default function ProductDetailsClient() {
                     </Button>
                   </div>
                 </div>
-              )}
 
               <div className="hidden md:flex flex-col gap-3">
                 <div className="grid grid-cols-2 gap-3">

@@ -9,8 +9,8 @@ interface VariantSelectorProps {
   variants: ProductVariant[];
   selectedVariant: ProductVariant | null;
   onSelect: (variant: ProductVariant) => void;
-  sizeQuantities: Record<string, number>;
-  onSizeQuantityChange: (size: string, quantity: number, maxStock: number) => void;
+  selectedSize: string | null;
+  onSizeSelect: (size: string | null) => void;
   selectedColor: string | null;
   onColorSelect: (color: string | null) => void;
   fabricOptions?: { id: string; name: string; desc?: string }[];
@@ -42,8 +42,8 @@ export function VariantSelector({
   variants,
   selectedVariant,
   onSelect,
-  sizeQuantities,
-  onSizeQuantityChange,
+  selectedSize,
+  onSizeSelect,
   selectedColor,
   onColorSelect,
   fabricOptions,
@@ -51,7 +51,6 @@ export function VariantSelector({
   onFabricSelect,
 }: VariantSelectorProps) {
   const [showSizeGuide, setShowSizeGuide] = useState(false);
-  const [showSizeSelector, setShowSizeSelector] = useState(false);
 
   // Extract unique sizes
   const sizes = [
@@ -143,9 +142,15 @@ export function VariantSelector({
 
   const handleColorSelect = (color: string) => {
     onColorSelect(color);
-    // When color changes, we might want to update selectedVariant based on the first size that has quantity, or just the first available
-    const activeSize = Object.keys(sizeQuantities).find(s => sizeQuantities[s] > 0) || null;
-    const variant = findVariant(activeSize, color, selectedFabric);
+    const variant = findVariant(selectedSize, color, selectedFabric);
+    if (variant) {
+      onSelect(variant);
+    }
+  };
+
+  const handleSizeSelect = (size: string) => {
+    onSizeSelect(size);
+    const variant = findVariant(size, selectedColor, selectedFabric);
     if (variant) {
       onSelect(variant);
     }
@@ -179,7 +184,7 @@ export function VariantSelector({
       {fabricOptions && fabricOptions.length > 0 && onFabricSelect && (
         <div className="space-y-2.5">
           <label className="text-xs font-extrabold uppercase tracking-wider text-foreground flex items-center gap-1.5">
-            <span>Fabric (ফ্যাব্রিক):</span>
+            <span>Breed / Category (ধরন):</span>
             {selectedFabric && (
               <span className="text-accent font-extrabold normal-case bg-accent/10 px-2 py-0.5 rounded-md text-xs">
                 {selectedFabric}
@@ -210,64 +215,41 @@ export function VariantSelector({
         </div>
       )}
 
-      {/* Size Selector (Bulk Quantities) */}
+      {/* Size Selector (Age) */}
       {sizes.length > 0 && (
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <label className="text-xs font-extrabold uppercase tracking-wider text-foreground flex items-center gap-1.5">
-              <span>Size & Quantity:</span>
-            </label>
+        <div className="space-y-2.5">
+          <label className="text-xs font-extrabold uppercase tracking-wider text-foreground flex items-center gap-1.5">
+            <span>Age (বয়স):</span>
+            {selectedSize && (
+              <span className="text-accent font-extrabold normal-case bg-accent/10 px-2 py-0.5 rounded-md text-xs">
+                {selectedSize}
+              </span>
+            )}
+          </label>
 
-            <button
-              type="button"
-              onClick={() => setShowSizeGuide(!showSizeGuide)}
-              className="text-xs font-semibold text-accent hover:underline flex items-center gap-1 cursor-pointer"
-            >
-              <Ruler className="h-3.5 w-3.5" />
-              <span>Size Guide</span>
-            </button>
-          </div>
-
-          <div className="flex flex-wrap lg:grid lg:grid-cols-5 gap-2.5">
+          <div className="flex flex-wrap gap-2.5">
             {sizes.map((size) => {
-              const availableVariant = variants.find((v) => v.size === size && v.stock > 0 && v.is_active && (!selectedColor || v.color?.includes(selectedColor)) && (!selectedFabric || v.fabric === selectedFabric));
-              const maxStock = availableVariant?.stock || 0;
-              const currentQty = sizeQuantities[size] || 0;
-              const isAvailable = maxStock > 0;
+              const available = isSizeAvailable(size);
+              const isSelected = selectedSize === size;
 
               return (
-                <div key={size} className={cn("flex-1 min-w-[28%] lg:min-w-0 flex flex-col items-center justify-center p-2.5 rounded-xl border transition-all duration-200", isAvailable ? (currentQty > 0 ? "bg-accent/5 border-accent shadow-xs ring-1 ring-accent/20" : "bg-card border-border/60 hover:border-accent/50 hover:shadow-2xs") : "bg-muted/30 border-border/30 opacity-50")}>
-                  <div className="flex flex-col items-center gap-0.5 mb-2.5">
-                    <span className={cn("font-black text-sm uppercase", currentQty > 0 ? "text-accent" : "text-foreground")}>{size}</span>
-                    {!isAvailable && (
-                      <span className="text-[10px] text-muted-foreground font-medium">Out of Stock</span>
-                    )}
-                  </div>
-                  
-                  {isAvailable && (
-                    <div className="flex items-center bg-secondary/40 border border-border/50 rounded-lg p-0.5 w-full justify-between">
-                      <button 
-                        type="button"
-                        className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-background hover:shadow-xs transition-all disabled:opacity-30 cursor-pointer"
-                        onClick={() => onSizeQuantityChange(size, Math.max(0, currentQty - 1), maxStock)}
-                        disabled={currentQty <= 0}
-                      >
-                        <span className="text-xl font-medium leading-none mb-0.5">-</span>
-                      </button>
-                      <div className="text-center font-bold text-sm text-foreground flex-1">
-                        {currentQty}
-                      </div>
-                      <button 
-                        type="button"
-                        className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-background hover:shadow-xs transition-all disabled:opacity-30 cursor-pointer"
-                        onClick={() => onSizeQuantityChange(size, Math.min(maxStock, currentQty + 1), maxStock)}
-                        disabled={currentQty >= maxStock}
-                      >
-                        <span className="text-xl font-medium leading-none mb-0.5">+</span>
-                      </button>
-                    </div>
+                <button
+                  key={size}
+                  type="button"
+                  onClick={() => handleSizeSelect(size)}
+                  disabled={!available}
+                  className={cn(
+                    "h-10 px-4 rounded-xl border text-xs font-bold transition-all duration-200 cursor-pointer flex items-center gap-2 select-none",
+                    isSelected
+                      ? "border-accent bg-accent/10 text-accent ring-1 ring-accent/40 shadow-2xs scale-105"
+                      : available
+                        ? "border-border/50 bg-card text-foreground hover:border-accent/40 hover:bg-secondary/30"
+                        : "border-border/30 bg-muted/30 text-muted-foreground/40 cursor-not-allowed line-through",
                   )}
-                </div>
+                >
+                  <span>{size}</span>
+                  {isSelected && <Check className="h-3.5 w-3.5 text-accent stroke-[3] ml-0.5" />}
+                </button>
               );
             })}
           </div>
@@ -278,7 +260,7 @@ export function VariantSelector({
       {visibleColors.length > 0 && (
         <div className="space-y-2.5">
           <label className="text-xs font-extrabold uppercase tracking-wider text-foreground flex items-center gap-1.5">
-            <span>Color:</span>
+            <span>Gender (লিঙ্গ):</span>
             {selectedColor && (
               <span className="text-accent font-extrabold normal-case bg-accent/10 px-2 py-0.5 rounded-md text-xs">
                 {selectedColor}
@@ -308,13 +290,7 @@ export function VariantSelector({
                         : "border-border/30 bg-muted/30 text-muted-foreground/40 cursor-not-allowed line-through",
                   )}
                 >
-                  {/* Swatch Dot */}
-                  {colorHex ? (
-                    <span
-                      className="h-3.5 w-3.5 rounded-full border border-black/20 shadow-xs shrink-0"
-                      style={{ backgroundColor: colorHex }}
-                    />
-                  ) : null}
+                  {/* No Swatch Dot for Gender */}
 
                   <span>{color}</span>
 
@@ -326,63 +302,7 @@ export function VariantSelector({
         </div>
       )}
 
-      {/* Quick Size Guide Modal */}
-      {showSizeGuide && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="bg-card border border-border/80 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-xl">
-            <div className="flex items-center justify-between border-b border-border/60 pb-3">
-              <div className="flex items-center gap-2">
-                <Ruler className="h-5 w-5 text-accent" />
-                <h3 className="font-extrabold text-base text-foreground">Standard Size Guide</h3>
-              </div>
-              <button
-                onClick={() => setShowSizeGuide(false)}
-                className="text-xs font-bold text-muted-foreground hover:text-foreground cursor-pointer px-2 py-1 rounded-lg bg-secondary"
-              >
-                ✕ Close
-              </button>
-            </div>
-
-            <div className="rounded-xl overflow-hidden border border-border/60 text-xs">
-              <table className="w-full text-center">
-                <thead>
-                  <tr className="bg-accent/10 text-accent font-bold border-b border-border/60">
-                    <th className="py-2.5 px-3">Size</th>
-                    <th className="py-2.5 px-3">Chest (in)</th>
-                    <th className="py-2.5 px-3">Length (in)</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr className="border-b border-border/40 bg-card">
-                    <td className="py-2 px-3 font-bold">M</td>
-                    <td className="py-2 px-3 text-muted-foreground">38" - 40"</td>
-                    <td className="py-2 px-3 text-muted-foreground">27"</td>
-                  </tr>
-                  <tr className="border-b border-border/40 bg-secondary/30">
-                    <td className="py-2 px-3 font-bold">L</td>
-                    <td className="py-2 px-3 text-muted-foreground">41" - 42"</td>
-                    <td className="py-2 px-3 text-muted-foreground">28"</td>
-                  </tr>
-                  <tr className="border-b border-border/40 bg-card">
-                    <td className="py-2 px-3 font-bold">XL</td>
-                    <td className="py-2 px-3 text-muted-foreground">43" - 44"</td>
-                    <td className="py-2 px-3 text-muted-foreground">29"</td>
-                  </tr>
-                  <tr className="bg-secondary/30">
-                    <td className="py-2 px-3 font-bold">XXL</td>
-                    <td className="py-2 px-3 text-muted-foreground">45" - 46"</td>
-                    <td className="py-2 px-3 text-muted-foreground">30"</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <p className="text-[11px] text-muted-foreground text-center italic">
-              Measurements are in inches. Standard regular fit.
-            </p>
-          </div>
-        </div>
-      )}
+      {/* Size Guide Modal Removed */}
     </div>
   );
 }
