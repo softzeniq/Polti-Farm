@@ -182,7 +182,7 @@ export function Header() {
       { name: "HOME", href: "/" },
       { name: "Shop", href: "/shop" },
       ...activeCategories.map((cat) => ({
-        name: cat.name.toUpperCase(),
+        name: cat.name,
         href: cat.href,
       })),
       { name: "Track Order", href: "/track-order" },
@@ -533,7 +533,7 @@ export function Header() {
                 type="submit"
                 className="bg-accent text-accent-foreground h-full px-5 hover:bg-accent/90 transition-colors flex items-center justify-center shrink-0 border-l border-border/10 cursor-pointer"
               >
-                <Search className="h-4.5 w-4.5" />
+                <Search className="h-5 w-5" />
               </button>
             </form>
 
@@ -762,7 +762,7 @@ export function Header() {
                   className="bg-accent text-accent-foreground p-2 rounded-lg hover:bg-accent/90 transition-colors flex items-center justify-center shrink-0 cursor-pointer"
                   aria-label="Search"
                 >
-                  <Search className="h-3.5 w-3.5" />
+                  <Search className="h-4 w-4" />
                 </button>
               </form>
             </div>
