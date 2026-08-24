@@ -72,8 +72,9 @@ export function ProductCard({ product }: ProductCardProps) {
       price: product.price,
       salePrice: product.sale_price || undefined,
       image: product.images[0] || "/placeholder.svg",
-      quantity: 1,
-      stock: product.stock || 10,
+      quantity: product.unit === "pcs" ? 10 : 1,
+      stock: product.stock || (product.unit === "pcs" ? 100 : 10),
+      unit: product.unit,
     });
 
     router.push("/checkout");
@@ -89,8 +90,9 @@ export function ProductCard({ product }: ProductCardProps) {
       price: product.price,
       salePrice: product.sale_price || undefined,
       image: product.images[0] || "/placeholder.svg",
-      quantity: 1,
-      stock: product.stock || 10,
+      quantity: product.unit === "pcs" ? 10 : 1,
+      stock: product.stock || (product.unit === "pcs" ? 100 : 10),
+      unit: product.unit,
     });
 
     toast.success(t("product.addedToCart") || "Product added to cart", {
@@ -131,13 +133,6 @@ export function ProductCard({ product }: ProductCardProps) {
             {/* Soft inner shadow for depth */}
             <div className="absolute inset-0 shadow-[inset_0_0_20px_rgba(0,0,0,0.03)] pointer-events-none" />
           </Link>
-
-          {/* Farm Fresh Tag - decorative */}
-          <div className="absolute top-2 right-2 z-10 pointer-events-none">
-             <span className="bg-white/80 backdrop-blur-md text-emerald-600 border border-emerald-100 px-2 py-0.5 text-[10px] font-bold rounded-full shadow-sm flex items-center gap-1 opacity-90">
-               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" /> Fresh
-             </span>
-          </div>
 
           {/* Top Left Discount Badge */}
           {hasDiscount && (

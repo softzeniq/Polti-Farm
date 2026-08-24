@@ -66,7 +66,15 @@ export default function ProductDetailsClient() {
   const { data: variants = [] } = useProductVariants(product?.id || "");
   const { data: reviews = [] } = useProductReviews(product?.id || "", true);
   const [selectedImage, setSelectedImage] = useState(0);
-  const [quantity, setQuantity] = useState(10);
+  const [quantity, setQuantity] = useState(1);
+  const minQty = product?.unit === "pcs" ? 10 : 1;
+  const step = product?.unit === "pcs" ? 10 : 1;
+
+  useEffect(() => {
+    if (product) {
+      setQuantity(product.unit === "pcs" ? 10 : 1);
+    }
+  }, [product?.id, product?.unit]);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   const [isBuyingNow, setIsBuyingNow] = useState(false);
   const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(
@@ -322,6 +330,7 @@ export default function ProductDetailsClient() {
           color: specificVariant?.color || undefined,
           fabric: selectedFabric || undefined,
         },
+        unit: product.unit,
       });
 
       trackAddToCart({
@@ -395,6 +404,7 @@ export default function ProductDetailsClient() {
           color: specificVariant?.color || undefined,
           fabric: selectedFabric || undefined,
         },
+        unit: product.unit,
       });
 
       trackAddToCart({
@@ -677,8 +687,8 @@ export default function ProductDetailsClient() {
                       variant="ghost"
                       size="icon"
                       className="h-10 w-10 rounded-none hover:bg-secondary cursor-pointer"
-                      onClick={() => setQuantity(Math.max(10, quantity - 10))}
-                      disabled={quantity <= 10}
+                      onClick={() => setQuantity(Math.max(minQty, quantity - step))}
+                      disabled={quantity <= minQty}
                     >
                       <Minus className="h-4 w-4" />
                     </Button>
@@ -690,7 +700,7 @@ export default function ProductDetailsClient() {
                       size="icon"
                       className="h-10 w-10 rounded-none hover:bg-secondary cursor-pointer"
                       onClick={() =>
-                        setQuantity(Math.min(effectiveStock, quantity + 10))
+                        setQuantity(Math.min(effectiveStock, quantity + step))
                       }
                       disabled={quantity >= effectiveStock}
                     >

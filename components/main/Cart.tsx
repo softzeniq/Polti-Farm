@@ -179,8 +179,8 @@ export default function CartPage() {
                     <div className="flex items-center border border-border/80 rounded-xl bg-background overflow-hidden p-1 shadow-2xs">
                       <button
                         type="button"
-                        onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                        disabled={item.quantity <= 1}
+                        onClick={() => updateQuantity(item.id, item.quantity - (item.unit === "pcs" ? 10 : 1))}
+                        disabled={item.quantity <= (item.unit === "pcs" ? 10 : 1)}
                         className="w-7 h-7 rounded-lg flex items-center justify-center text-foreground/80 hover:bg-secondary hover:text-foreground disabled:opacity-30 disabled:hover:bg-transparent transition-colors"
                       >
                         <Minus className="h-3 w-3" />
@@ -190,7 +190,7 @@ export default function CartPage() {
                       </span>
                       <button
                         type="button"
-                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                        onClick={() => updateQuantity(item.id, item.quantity + (item.unit === "pcs" ? 10 : 1))}
                         disabled={item.quantity >= item.stock}
                         className="w-7 h-7 rounded-lg flex items-center justify-center text-foreground/80 hover:bg-secondary hover:text-foreground disabled:opacity-30 disabled:hover:bg-transparent transition-colors"
                       >

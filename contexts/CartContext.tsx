@@ -13,6 +13,7 @@ export interface CartItem {
   stock: number;
   variantId?: string;
   variantInfo?: { size?: string | null; color?: string | null; fabric?: string | null };
+  unit?: string;
 }
 
 interface CartState {
@@ -60,17 +61,19 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
     case "UPDATE_QUANTITY":
       return {
         ...state,
-        items: state.items.map((item) =>
-          item.id === action.payload.id
-            ? {
-                ...item,
-                quantity: Math.max(
-                  1,
-                  Math.min(action.payload.quantity, item.stock),
-                ),
-              }
-            : item,
-        ),
+        items: state.items.map((item) => {
+          if (item.id === action.payload.id) {
+            const minQty = item.unit === "pcs" ? 10 : 1;
+            return {
+              ...item,
+              quantity: Math.max(
+                minQty,
+                Math.min(action.payload.quantity, item.stock),
+              ),
+            };
+          }
+          return item;
+        }),
       };
     case "CLEAR_CART":
       return { ...state, items: [] };
