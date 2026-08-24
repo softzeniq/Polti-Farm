@@ -74,7 +74,7 @@ export function ProductCard({ product }: ProductCardProps) {
       image: product.images[0] || "/placeholder.svg",
       quantity: product.unit === "pcs" ? 10 : 1,
       stock: product.stock || (product.unit === "pcs" ? 100 : 10),
-      unit: product.unit,
+      unit: product.unit || undefined,
     });
 
     router.push("/checkout");
@@ -92,7 +92,7 @@ export function ProductCard({ product }: ProductCardProps) {
       image: product.images[0] || "/placeholder.svg",
       quantity: product.unit === "pcs" ? 10 : 1,
       stock: product.stock || (product.unit === "pcs" ? 100 : 10),
-      unit: product.unit,
+      unit: product.unit || undefined,
     });
 
     toast.success(t("product.addedToCart") || "Product added to cart", {

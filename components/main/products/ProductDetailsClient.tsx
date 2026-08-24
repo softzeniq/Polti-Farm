@@ -330,7 +330,7 @@ export default function ProductDetailsClient() {
           color: specificVariant?.color || undefined,
           fabric: selectedFabric || undefined,
         },
-        unit: product.unit,
+        unit: product.unit || undefined,
       });
 
       trackAddToCart({
@@ -404,7 +404,7 @@ export default function ProductDetailsClient() {
           color: specificVariant?.color || undefined,
           fabric: selectedFabric || undefined,
         },
-        unit: product.unit,
+        unit: product.unit || undefined,
       });
 
       trackAddToCart({
