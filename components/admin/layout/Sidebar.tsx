@@ -36,7 +36,7 @@ export function AdminSidebar({ mobile, closeSidebar }: Props) {
     <aside
       className={`
       w-[280px]
-      h-full
+      h-[100dvh]
       border-r
       bg-card
       flex

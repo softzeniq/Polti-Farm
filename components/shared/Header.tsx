@@ -182,7 +182,7 @@ export function Header() {
       { name: "Home", href: "/" },
       { name: "Shop", href: "/shop" },
       ...activeCategories.map((cat) => ({
-        name: cat.name, product
+        name: cat.name,
         href: cat.href,
       })),
       { name: "Track Order", href: "/track-order" },
@@ -231,7 +231,7 @@ export function Header() {
                   </Button>
                 </SheetTrigger>
                 <SheetContent side="left" className="w-[85vw] max-w-xs bg-background p-0 border-r border-border/60">
-                  <div className="flex flex-col h-full">
+                  <div className="flex flex-col h-[100dvh] overflow-hidden">
                     {/* Drawer Header */}
                     <div className="p-5 border-b border-border/60 bg-secondary/30 flex items-center justify-between">
                       <Link href="/" className="flex items-center gap-2">
@@ -420,14 +420,14 @@ export function Header() {
             {/* Desktop Wide Search Bar */}
             <form
               onSubmit={handleSearchSubmit}
-              className="hidden md:flex items-center flex-1 max-w-xl border border-border/80 rounded-xl bg-background overflow-visible relative shadow-2xs focus-within:border-accent"
+              className="hidden md:flex items-stretch flex-1 max-w-xl border border-border/80 rounded-xl bg-background overflow-visible relative shadow-2xs focus-within:border-accent"
             >
               {/* Category Dropdown inside Search Bar */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button
                     type="button"
-                    className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-foreground/80 bg-secondary/30 hover:bg-secondary/50 transition-colors border-r border-border/50 shrink-0 cursor-pointer h-full"
+                    className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-foreground/80 bg-secondary/30 hover:bg-secondary/50 transition-colors border-r border-border/50 shrink-0 cursor-pointer h-full rounded-l-xl"
                   >
                     <span className="truncate max-w-[120px]">
                       {selectedCategory ? selectedCategory.name : "All Categories"}
@@ -531,7 +531,7 @@ export function Header() {
               )}
               <button
                 type="submit"
-                className="bg-accent text-accent-foreground py-2.5 px-5 hover:bg-accent/90 transition-colors flex items-center justify-center shrink-0 border-l border-border/10 cursor-pointer"
+                className="bg-accent text-accent-foreground py-2.5 px-5 hover:bg-accent/90 transition-colors flex items-center justify-center shrink-0 border-l border-border/10 cursor-pointer rounded-r-xl"
               >
                 <Search className="h-5 w-5" />
               </button>
