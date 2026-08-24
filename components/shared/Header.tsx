@@ -39,14 +39,14 @@ import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
-function HoverHeaderCategoryItem({ 
-  category, 
-  subcategories, 
-  onSelect 
-}: { 
-  category: any; 
-  subcategories: any[]; 
-  onSelect: (cat: any) => void 
+function HoverHeaderCategoryItem({
+  category,
+  subcategories,
+  onSelect
+}: {
+  category: any;
+  subcategories: any[];
+  onSelect: (cat: any) => void
 }) {
   const [isHovered, setIsHovered] = useState(false);
   const [coords, setCoords] = useState({ top: 0, left: 0 });
@@ -179,10 +179,10 @@ export function Header() {
 
   const navigation = useMemo(
     () => [
-      { name: "HOME", href: "/" },
+      { name: "Home", href: "/" },
       { name: "Shop", href: "/shop" },
       ...activeCategories.map((cat) => ({
-        name: cat.name,
+        name: cat.name, product
         href: cat.href,
       })),
       { name: "Track Order", href: "/track-order" },
@@ -531,7 +531,7 @@ export function Header() {
               )}
               <button
                 type="submit"
-                className="bg-accent text-accent-foreground h-full px-5 hover:bg-accent/90 transition-colors flex items-center justify-center shrink-0 border-l border-border/10 cursor-pointer"
+                className="bg-accent text-accent-foreground py-2.5 px-5 hover:bg-accent/90 transition-colors flex items-center justify-center shrink-0 border-l border-border/10 cursor-pointer"
               >
                 <Search className="h-5 w-5" />
               </button>
